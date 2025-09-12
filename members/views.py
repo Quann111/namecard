@@ -157,20 +157,13 @@ def download_vcf(request, id):
     if profile.viber:
         lines.append(_fold(f"X-SOCIALPROFILE;type=viber:viber://chat?number={profile.viber}"))
 
-    # Avatar base64 (nếu có)
-    if profile.avatar and default_storage.exists(profile.avatar.name):
-        with default_storage.open(profile.avatar.name, "rb") as f:
-            data = f.read()
-        mime, _ = mimetypes.guess_type(profile.avatar.name)
-        mime = mime or "image/jpeg"
-        img_type = "JPEG" if "jpeg" in mime or "jpg" in mime else "PNG"
-        b64 = base64.b64encode(data).decode("ascii")
-        lines.append(_fold(f"PHOTO;ENCODING=b;TYPE={img_type}:{b64}"))
+    # ✅ Avatar dùng URL trực tiếp từ Cloudinary
+    if profile.avatar:
+        lines.append(_fold(f"PHOTO;VALUE=uri:{profile.avatar.url}"))
 
     lines.append("END:VCARD")
     vcf_content = "\r\n".join(lines) + "\r\n"
 
-    # Tên file theo full_name (hỗ trợ unicode)
     safe = slugify(full_name) or "contact"
     quoted = quote(f"{full_name}.vcf")
 
@@ -179,7 +172,6 @@ def download_vcf(request, id):
         f"attachment; filename={safe}.vcf; filename*=UTF-8''{quoted}"
     )
     return response
-
 
 # --- QR code cho link details ---
 def qr_code(request, id):

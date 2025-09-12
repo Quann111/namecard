@@ -4,9 +4,13 @@
   --light-bg: #f9fafd;
   --gray-text: #666;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background-color: #fff;
   display: flex;
   justify-content: center;
@@ -50,9 +54,22 @@ body {
   text-align: center;
   overflow-y: auto;
 }
-.name { font-size: 2.5vh; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5vh; }
-.position { font-size: 1.8vh; color: #000F47; margin-bottom: 0.3vh; }
-.company { font-size: 1.7vh; color: #000F47; margin-bottom: 3vh; }
+.name {
+  font-size: 2.5vh;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.5vh;
+}
+.position {
+  font-size: 1.8vh;
+  color: #000f47;
+  margin-bottom: 0.3vh;
+}
+.company {
+  font-size: 1.7vh;
+  color: #000f47;
+  margin-bottom: 3vh;
+}
 
 /* Button top */
 .button-group {
@@ -63,7 +80,7 @@ body {
 }
 .button {
   flex: 1;
-  background: #00377B;
+  background: #00377b;
   color: #4bcffa;
   font-size: 1.8vh;
   font-weight: 600;
@@ -113,16 +130,24 @@ body {
   cursor: pointer;
   text-transform: uppercase;
 }
-.nav-home { background: #002855; }
-.nav-intro { background: #3accf8; }
-.nav-product { background: #00c4f7; }
-.nav-login { background: #00c6fa; }
+.nav-home {
+  background: #002855;
+}
+.nav-intro {
+  background: #3accf8;
+}
+.nav-product {
+  background: #00c4f7;
+}
+.nav-login {
+  background: #00c6fa;
+}
 
 /* Popup Overlay */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   display: none;
   justify-content: center;
   align-items: center;
@@ -138,13 +163,19 @@ body {
   border-radius: 10px;
   width: 300px;
   text-align: center;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.4);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
   animation: fadeIn 0.3s ease;
 }
-.popup h2 { margin-bottom: 15px; color: #00377B; }
-.popup p { margin-bottom: 20px; color: #555; }
+.popup h2 {
+  margin-bottom: 15px;
+  color: #00377b;
+}
+.popup p {
+  margin-bottom: 20px;
+  color: #555;
+}
 .popup a.close-btn {
-  background: #00377B;
+  background: #00377b;
   color: #fff;
   padding: 10px 20px;
   border-radius: 5px;
@@ -154,13 +185,19 @@ body {
 
 /* Hiệu ứng */
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 /* Button với glow effect */
 .glow-btn {
-  background: #00377B;
-  color: #FFFFFF;
+  background: #00377b;
+  color: #ffffff;
   padding: 12px 20px;
   border: none;
   border-radius: 5px;
@@ -173,7 +210,7 @@ body {
 }
 
 .glow-btn:hover {
-  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
   transform: scale(1.05);
   color: #fff;
   background: #0fbcf9;
@@ -183,7 +220,7 @@ body {
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   display: none;
   justify-content: center;
   align-items: center;
@@ -201,15 +238,21 @@ body {
   border-radius: 10px;
   width: 300px;
   text-align: center;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.4);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
   animation: slideDown 0.4s ease;
 }
-.popup h2 { margin-bottom: 15px; color: #00377B; }
-.popup p { margin-bottom: 20px; color: #555; }
+.popup h2 {
+  margin-bottom: 15px;
+  color: #00377b;
+}
+.popup p {
+  margin-bottom: 20px;
+  color: #555;
+}
 
 /* Nút Đóng */
 .close-btn {
-  background: #00377B;
+  background: #00377b;
   color: #4bcffa;
   padding: 10px 20px;
   border-radius: 5px;
@@ -220,16 +263,103 @@ body {
 .close-btn:hover {
   background: #0fbcf9;
   color: #fff;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
   transform: scale(1.05);
 }
 
 /* Hiệu ứng */
 @keyframes fadeInOverlay {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+/* Modal nền đen full màn hình */
+.image-modal {
+  display: none; /* ẩn mặc định */
+  position: fixed;
+  z-index: 9999;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Ảnh phóng to */
+.image-modal img {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 6px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Nút đóng */
+.image-modal .close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.image-modal .close:hover {
+  color: #ccc;
+}
+
+.image-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+.image-modal img {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 6px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease;
+}
+.image-modal .close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.image-modal .close:hover {
+  color: #ccc;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

@@ -4,11 +4,15 @@
   --light-bg: #f9fafd;
   --gray-text: #666;
 }
+
+/* Reset */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
+/* Body */
 body {
   font-family: "Segoe UI", sans-serif;
   background-color: #fff;
@@ -20,6 +24,8 @@ body {
   overflow-x: hidden;
   color: var(--secondary);
 }
+
+/* Card */
 .card-container {
   width: 100%;
   height: 100vh;
@@ -27,6 +33,7 @@ body {
   flex-direction: column;
   background: #fff;
 }
+
 /* Header */
 .header {
   background-color: var(--primary);
@@ -35,7 +42,9 @@ body {
   justify-content: center;
   align-items: flex-end;
   position: relative;
+  cursor: zoom-in; /* cho phép click */
 }
+
 .profile-img {
   width: 18vh;
   height: 18vh;
@@ -46,7 +55,10 @@ body {
   object-fit: cover;
   position: absolute;
   bottom: -9vh;
+  cursor: zoom-in; /* click vào avatar */
+  pointer-events: auto; /* tránh bị ăn event từ header */
 }
+
 /* Content */
 .content {
   flex: 1;
@@ -155,79 +167,6 @@ body {
 }
 .overlay:target {
   display: flex;
-}
-/* Popup Box */
-.popup {
-  background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  width: 300px;
-  text-align: center;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
-  animation: fadeIn 0.3s ease;
-}
-.popup h2 {
-  margin-bottom: 15px;
-  color: #00377b;
-}
-.popup p {
-  margin-bottom: 20px;
-  color: #555;
-}
-.popup a.close-btn {
-  background: #00377b;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  display: inline-block;
-}
-
-/* Hiệu ứng */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-/* Button với glow effect */
-.glow-btn {
-  background: #00377b;
-  color: #ffffff;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  text-transform: uppercase;
-  cursor: pointer;
-  text-decoration: none;
-  transition: box-shadow 0.3s ease, transform 0.2s ease;
-  display: inline-block;
-}
-
-.glow-btn:hover {
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-  transform: scale(1.05);
-  color: #fff;
-  background: #0fbcf9;
-}
-
-/* Overlay */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-.overlay:target {
-  display: flex;
   animation: fadeInOverlay 0.3s ease;
 }
 
@@ -267,63 +206,28 @@ body {
   transform: scale(1.05);
 }
 
-/* Hiệu ứng */
-@keyframes fadeInOverlay {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-/* Modal nền đen full màn hình */
-.image-modal {
-  display: none; /* ẩn mặc định */
-  position: fixed;
-  z-index: 9999;
-  padding-top: 60px;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.9);
-}
-
-/* Ảnh phóng to */
-.image-modal img {
-  margin: auto;
-  display: block;
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 6px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-}
-
-/* Nút đóng */
-.image-modal .close {
-  position: absolute;
-  top: 20px;
-  right: 35px;
-  color: #fff;
-  font-size: 40px;
+/* Glow button */
+.glow-btn {
+  background: #00377b;
+  color: #ffffff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
   font-weight: bold;
+  text-transform: uppercase;
   cursor: pointer;
+  text-decoration: none;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  display: inline-block;
 }
-.image-modal .close:hover {
-  color: #ccc;
+.glow-btn:hover {
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  transform: scale(1.05);
+  color: #fff;
+  background: #0fbcf9;
 }
 
+/* Modal nền đen full màn hình */
 .image-modal {
   display: none;
   position: fixed;
@@ -333,6 +237,7 @@ body {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.9);
+  padding-top: 60px;
 }
 .image-modal img {
   margin: auto;
@@ -355,11 +260,31 @@ body {
 .image-modal .close:hover {
   color: #ccc;
 }
+
+/* Hiệu ứng */
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }

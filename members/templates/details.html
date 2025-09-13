@@ -23,6 +23,7 @@
       <!-- Header -->
       <div
         class="header"
+        id="profileHeader"
         style="
           {% if profile.background %}
             background-image: url('{{ profile.background.url }}');
@@ -37,6 +38,7 @@
         {% if profile.avatar %}
         <img
           class="profile-img"
+          id="profileAvatar"
           src="{{ profile.avatar.url }}"
           alt="{{ profile.full_name }}"
           data-full="{{ profile.avatar.url }}"
@@ -44,6 +46,7 @@
         {% else %}
         <img
           class="profile-img"
+          id="profileAvatar"
           src="{% static 'images/default-avatar.png' %}"
           alt="Default Avatar"
           data-full="{% static 'images/default-avatar.png' %}"
@@ -73,33 +76,32 @@
         </div>
 
         {% if profile.phone %}
-        <a href="tel:{{ profile.phone }}" class="contact-btn">
-          📞 {{ profile.phone }}
-        </a>
+        <a href="tel:{{ profile.phone }}" class="contact-btn"
+          >📞 {{ profile.phone }}</a
+        >
         {% endif %} {% if profile.email %}
-        <a href="mailto:{{ profile.email }}" class="contact-btn">
-          ✉️ {{ profile.email }}
-        </a>
+        <a href="mailto:{{ profile.email }}" class="contact-btn"
+          >✉️ {{ profile.email }}</a
+        >
         {% endif %} {% if profile.website %}
-        <a href="{{ profile.website }}" target="_blank" class="contact-btn">
-          🌐 {{ profile.website }}
-        </a>
+        <a href="{{ profile.website }}" target="_blank" class="contact-btn"
+          >🌐 {{ profile.website }}</a
+        >
         {% endif %} {% if profile.youtube %}
-        <a href="{{ profile.youtube }}" target="_blank" class="contact-btn">
-          ▶ YouTube
-        </a>
+        <a href="{{ profile.youtube }}" target="_blank" class="contact-btn"
+          >▶ YouTube</a
+        >
         {% endif %} {% if profile.zalo %}
         <a
           href="https://zalo.me/{{ profile.zalo }}"
           target="_blank"
           class="contact-btn"
+          >💬 Zalo</a
         >
-          💬 Zalo
-        </a>
         {% endif %} {% if profile.viber %}
-        <a href="viber://chat?number={{ profile.viber }}" class="contact-btn">
-          📱 Viber
-        </a>
+        <a href="viber://chat?number={{ profile.viber }}" class="contact-btn"
+          >📱 Viber</a
+        >
         {% endif %}
 
         <div class="nav-buttons">
@@ -153,6 +155,49 @@
       <img class="modal-content" id="modalImage" />
     </div>
 
-    <script src="{% static 'js/card.js' %}"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        const closeBtn = document.querySelector(".image-modal .close");
+
+        const header = document.getElementById("profileHeader");
+        const avatar = document.getElementById("profileAvatar");
+        const bgUrl = document.body.dataset.bg || "";
+
+        function openModal(src) {
+          if (!src) return;
+          modalImg.src = src;
+          modal.style.display = "block";
+        }
+        function closeModal() {
+          modal.style.display = "none";
+          modalImg.removeAttribute("src");
+        }
+
+        // Avatar click -> chỉ mở avatar
+        if (avatar) {
+          avatar.style.cursor = "zoom-in";
+          avatar.addEventListener("click", function (e) {
+            e.stopPropagation();
+            openModal(this.dataset.full || this.src);
+          });
+        }
+
+        // Header click -> chỉ mở background
+        if (header && bgUrl) {
+          header.style.cursor = "zoom-in";
+          header.addEventListener("click", function (e) {
+            if (e.target.closest("#profileAvatar")) return; // tránh avatar
+            openModal(bgUrl);
+          });
+        }
+
+        if (closeBtn) closeBtn.onclick = closeModal;
+        modal.onclick = (e) => {
+          if (e.target === modal) closeModal();
+        };
+      });
+    </script>
   </body>
 </html>

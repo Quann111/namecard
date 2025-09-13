@@ -1,9 +1,10 @@
+// ================== DETECT MOBILE ==================
 function isMobileUA() {
   const ua = navigator.userAgent || navigator.vendor || window.opera;
   return /Android|iPhone|iPad|iPod/i.test(ua);
 }
 
-// Chuẩn hóa số: giữ dấu + đầu và chữ số
+// ================== CHUẨN HÓA SỐ ==================
 function normalizePhone(raw) {
   if (!raw) return "";
   const t = String(raw).trim();
@@ -12,7 +13,7 @@ function normalizePhone(raw) {
   return keepPlus ? "+" + digits : digits;
 }
 
-// --- LƯU DANH BẠ: mobile + có số => mở app gọi; còn lại để tải .vcf ---
+// ================== LƯU DANH BẠ ==================
 (function attachSaveHandler() {
   const btn = document.getElementById("saveContact");
   if (!btn) return;
@@ -20,16 +21,16 @@ function normalizePhone(raw) {
     const phoneRaw = btn.getAttribute("data-phone") || "";
     const phone = normalizePhone(phoneRaw);
     if (isMobileUA() && phone) {
-      e.preventDefault(); // chặn tải .vcf, ưu tiên gọi
+      e.preventDefault();
       window.location.href = "tel:" + phone;
     }
   });
 })();
 
-// URL chi tiết profile hiện tại (server render từ Django template)
+// ================== URL PROFILE ==================
 const PROFILE_URL = "{{ request.build_absolute_uri|escapejs }}";
 
-// --- CHIA SẺ: 3 nút trong popup ---
+// ================== CHIA SẺ ==================
 (function sharePopupHandlers() {
   const btnDownloadQR = document.getElementById("btnDownloadQR");
   const btnCopyLink = document.getElementById("btnCopyLink");
@@ -63,7 +64,6 @@ const PROFILE_URL = "{{ request.build_absolute_uri|escapejs }}";
         await navigator.clipboard.writeText(PROFILE_URL);
         alert("Đã copy link: " + PROFILE_URL);
       } catch (e) {
-        // Fallback nếu clipboard bị chặn
         const ta = document.createElement("textarea");
         ta.value = PROFILE_URL;
         document.body.appendChild(ta);
@@ -87,9 +87,7 @@ const PROFILE_URL = "{{ request.build_absolute_uri|escapejs }}";
       if (navigator.share) {
         try {
           await navigator.share(shareData);
-        } catch (_) {
-          // người dùng đóng menu share -> không làm gì
-        }
+        } catch (_) {}
       } else {
         const fb =
           "https://www.facebook.com/sharer/sharer.php?u=" +
@@ -100,35 +98,37 @@ const PROFILE_URL = "{{ request.build_absolute_uri|escapejs }}";
   }
 })();
 
+// ================== MODAL ẢNH ==================
 document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("imageModal");
   const modalImg = document.getElementById("modalImage");
   const closeBtn = document.querySelector(".image-modal .close");
 
-  // Avatar
+  // --- Avatar ---
   const avatar = document.querySelector(".profile-img");
   if (avatar) {
-    avatar.style.cursor = "zoom-in";
-    avatar.addEventListener("click", function () {
+    avatar.addEventListener("click", function (e) {
+      e.stopPropagation(); // Ngăn lan sự kiện ra header
       modal.style.display = "block";
       modalImg.src = this.dataset.full || this.src;
     });
   }
 
-  // Background (từ data-bg ở <body>)
+  // --- Background ---
   const body = document.body;
   const bgUrl = body.dataset.bg;
   if (bgUrl) {
     const header = document.querySelector(".header");
-    header.style.cursor = "zoom-in";
-    header.addEventListener("click", function () {
+    header.addEventListener("click", function (e) {
+      // Nếu click trúng avatar thì bỏ qua
+      if (e.target.classList.contains("profile-img")) return;
       modal.style.display = "block";
       modalImg.src = bgUrl;
     });
   }
 
-  // Đóng modal
-  closeBtn.onclick = () => (modal.style.display = "none");
+  // --- Đóng modal ---
+  if (closeBtn) closeBtn.onclick = () => (modal.style.display = "none");
   modal.onclick = (e) => {
     if (e.target === modal) modal.style.display = "none";
   };

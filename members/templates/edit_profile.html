@@ -1,124 +1,172 @@
-{% extends "master.html" %}
-{% block title %}Edit Profile - {{ profile.full_name }}{% endblock %}
+{% extends "master.html" %} {% load static %} {% block title %}Edit Profile - {{
+profile.full_name }}{% endblock %} {% block content %}
 
-{% block content %}
-<style>
-  :root{
-    --bg:#f3f4f6;        /* page bg */
-    --card:#ffffff;      /* card bg */
-    --text:#111827;      /* text */
-    --muted:#6b7280;     /* muted text */
-    --primary:#243cfd;   /* brand */
-    --primary-2:#1a2fde; /* hover */
-    --ring:#6c63ff;      /* focus ring */
-    --border:#e5e7eb;    /* borders */
-    --danger:#dc2626;    /* error */
-  }
-
-  .page-wrap{max-width:720px;margin:24px auto;padding:0 16px;}
-  .card{
-    background:var(--card);color:var(--text);
-    border-radius:14px;overflow:hidden;
-    box-shadow:0 8px 24px rgba(0,0,0,.08);
-  }
-  .card-head{
-    padding:18px 20px;border-bottom:1px solid var(--border);
-    display:flex;align-items:center;gap:14px;
-  }
-  .card-head h1{margin:0;font-size:20px;font-weight:800;line-height:1.2;}
-  .subtitle{color:var(--muted);font-size:14px;margin-top:2px;}
-
-  /* avatar preview */
-  .avatar-box{display:flex;align-items:center;gap:16px;margin-top:10px;}
-  .avatar-box img{
-    width:96px;height:96px;object-fit:cover;border-radius:12px;
-    border:1px solid var(--border);box-shadow:0 4px 14px rgba(0,0,0,.06);
-  }
-
-  /* form */
-  .form-wrap{padding:20px;display:flex;flex-direction:column;gap:14px;}
-  .form-grid{display:block;} /* mobile: 1 cột */
-  .form-wrap p{margin:0;display:flex;flex-direction:column;gap:6px;}
-  .form-wrap label{font-weight:600;color:#1f2937;font-size:14px;}
-
-  /* áp thẳng style lên widget mặc định của Django */
-  .form-wrap input[type="text"],
-  .form-wrap input[type="email"],
-  .form-wrap input[type="password"],
-  .form-wrap input[type="url"],
-  .form-wrap input[type="tel"],
-  .form-wrap input[type="file"],
-  .form-wrap textarea,
-  .form-wrap select{
-    width:100%;box-sizing:border-box;
-    padding:12px 14px;border-radius:10px;
-    border:1.5px solid #3b51f5;background:#fff;color:#111;
-    font-size:16px; /* tránh iOS auto-zoom */
-    transition:border-color .2s, box-shadow .2s;
-  }
-  .form-wrap textarea{min-height:110px;resize:vertical;}
-  .form-wrap input:focus,
-  .form-wrap textarea:focus,
-  .form-wrap select:focus{
-    outline:none;border-color:var(--ring);
-    box-shadow:0 0 0 4px rgba(108,99,255,.18);
-  }
-
-  /* file input */
-  .form-wrap input[type="file"]{padding:10px;}
-
-  /* actions */
-  .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:4px;}
-  .btn{border:none;border-radius:9999px;padding:12px 18px;font-weight:700;font-size:16px;cursor:pointer;user-select:none;}
-  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 14px rgba(36,60,253,.28);}
-  .btn-primary:hover{background:var(--primary-2);}
-  .backlink{display:inline-flex;align-items:center;gap:8px;color:var(--primary);text-decoration:none;font-weight:700;}
-  .backlink:hover{text-decoration:underline;}
-
-  /* desktop ≥640px: 2 cột */
-  @media (min-width:640px){
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;}
-    .form-grid p{margin:0;}
-    .actions{grid-column:1/-1;}
-  }
-
-  /* màn cực nhỏ ≤360px */
-  @media (max-width:360px){
-    .card-head{padding:14px 16px;}
-    .form-wrap{padding:16px;}
-    .btn{width:100%;justify-content:center;}
-  }
-</style>
+<link rel="stylesheet" href="{% static 'css/edit_profile.css' %}" />
 
 <div class="page-wrap">
   <div class="card">
     <div class="card-head">
-      <div>
-        <h1>Edit Profile</h1>
-        <div class="subtitle">{{ profile.full_name }}</div>
+      <h1>Edit Profile</h1>
+      <div class="name">{{ profile.full_name }}</div>
+    </div>
 
-        {% if profile.avatar %}
-        <div class="avatar-box">
-          <img src="{{ profile.avatar.url }}" alt="{{ profile.full_name }}">
-          <div class="subtitle">Current avatar preview</div>
-        </div>
-        {% endif %}
+    <!-- Avatar -->
+    <div class="media-box">
+      {% if profile.avatar %}
+      <img
+        src="{{ profile.avatar.url }}"
+        alt="Avatar {{ profile.full_name }}"
+      />
+      {% else %}
+      <img
+        src="{% static 'images/default-avatar.png' %}"
+        alt="Default Avatar"
+      />
+      {% endif %}
+      <div class="upload-info">
+        <div class="subtitle">Upload new avatar</div>
+        <input
+          type="file"
+          name="avatar"
+          id="id_avatar"
+          hidden
+          accept="image/*"
+        />
+        <label for="id_avatar" class="file-input">Chọn ảnh</label>
       </div>
     </div>
 
+    <!-- Background -->
+    <div class="media-box">
+      {% if profile.background %}
+      <img
+        src="{{ profile.background.url }}"
+        alt="Background {{ profile.full_name }}"
+      />
+      {% else %}
+      <img
+        src="{% static 'images/default-bg.png' %}"
+        alt="Default Background"
+      />
+      {% endif %}
+      <div class="upload-info">
+        <div class="subtitle">Upload new background</div>
+        <input
+          type="file"
+          name="background"
+          id="id_background"
+          hidden
+          accept="image/*"
+        />
+        <label for="id_background" class="file-input">Chọn ảnh</label>
+      </div>
+    </div>
+
+    <!-- Form fields -->
     <div class="form-wrap">
-      <form method="POST" enctype="multipart/form-data" class="form-grid">
+      <form id="profileForm" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
-        {# Dùng Django render mặc định, CSS trên sẽ áp vào toàn bộ #}
-        {{ form.as_p }}
+        <div class="form-field">
+          <label for="id_username">Username</label>
+          {{ form.username }}
+        </div>
+
+        <div class="form-field">
+          <label for="id_password">Password</label>
+          {{ form.password }}
+        </div>
+
+        <div class="form-field">
+          <label for="id_full_name">Full Name</label>
+          {{ form.full_name }}
+        </div>
+
+        <div class="form-field">
+          <label for="id_position">Position</label>
+          {{ form.position }}
+        </div>
+
+        <div class="form-field">
+          <label for="id_company">Company</label>
+          {{ form.company }}
+        </div>
+
+        <div class="form-field">
+          <label for="id_phone">Phone</label>
+          {{ form.phone }}
+        </div>
+
+        <div class="form-field">
+          <label for="id_email">Email</label>
+          {{ form.email }}
+        </div>
+
+        <div class="form-field">
+          <label for="id_website">Website</label>
+          {{ form.website }}
+        </div>
+
+        <div class="form-field">
+          <label for="id_youtube">YouTube</label>
+          {{ form.youtube }}
+        </div>
+
+        <div class="form-field">
+          <label for="id_zalo">Zalo</label>
+          {{ form.zalo }}
+        </div>
+
+        <div class="form-field">
+          <label for="id_viber">Viber</label>
+          {{ form.viber }}
+        </div>
 
         <div class="actions">
-          <button type="submit" class="btn btn-primary">Save changes</button>
-          <a class="backlink" href="{% url 'details' id=profile.id %}">← Back to details</a>
+          <div class="uiverse">
+            <span class="tooltip">Lưu lại thay đổi</span>
+            <button type="button" id="saveBtn">Save changes</button>
+          </div>
+
+          <div class="uiverse">
+            <span class="tooltip">Quay lại trang chi tiết</span>
+            <a href="{% url 'details' id=profile.id %}" id="backLink">← Back</a>
+          </div>
         </div>
       </form>
     </div>
   </div>
 </div>
+
 {% endblock %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const saveBtn = document.getElementById("saveBtn");
+    const backLink = document.getElementById("backLink");
+    const form = document.getElementById("profileForm");
+
+    if (saveBtn) {
+      saveBtn.addEventListener("click", function () {
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Processing...";
+
+        setTimeout(() => {
+          form.submit();
+        }, 2000);
+      });
+    }
+
+    if (backLink) {
+      backLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        const url = backLink.getAttribute("href");
+
+        backLink.textContent = "Loading...";
+        setTimeout(() => {
+          window.location.href = url;
+        }, 2000);
+      });
+    }
+  });
+</script>

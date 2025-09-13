@@ -6,7 +6,8 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = [
             "username", "password", "full_name", "position", "company",
-            "avatar", "phone", "email", "website", "youtube", "zalo", "viber"
+            "avatar", "background",   
+            "phone", "email", "website", "youtube", "zalo", "viber"
         ]
         widgets = {
             "password": forms.PasswordInput(render_value=True),

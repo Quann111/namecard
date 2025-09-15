@@ -70,8 +70,8 @@
             download
           >
             <img
-              class="icon-img-luudanhba-chiase"
-              src="/media/avatars/icon.png"
+              src="{% static 'images/icon.png' %}"
+              class="icon-img"
               alt="icon"
             />
             <p class="btn-text">LƯU DANH BẠ</p>
@@ -79,8 +79,8 @@
 
           <label for="toggle-share" class="button glow-btn" role="button">
             <img
-              class="icon-img-luudanhba-chiase"
-              src="/media/avatars/icon.png"
+              src="{% static 'images/icon.png' %}"
+              class="icon-img"
               alt="icon"
             />
             <p class="btn-text">CHIA SẺ</p>
@@ -117,7 +117,11 @@
         </a>
         {% endif %} {% if profile.youtube %}
         <a href="{{ profile.youtube }}" target="_blank" class="contact-btn">
-          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <img
+            src="{% static 'images/icon.png' %}"
+            class="icon-img"
+            alt="icon"
+          />
           <span>YouTube</span>
         </a>
         {% endif %} {% if profile.zalo %}

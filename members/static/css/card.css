@@ -129,11 +129,11 @@ body {
   padding: 1.2vh 1.5vh;
   margin-bottom: 1.5vh;
   width: 100%;
-  border: 1px solid var(--secondary);
+  /* border: 1px solid var(--secondary);*/
   border-radius: 6px;
-  background: var(--light-bg);
+  background: #27272a;
   font-size: 1.8vh;
-  color: var(--secondary);
+  color: #ffffff;
   text-align: left;
   cursor: pointer;
   text-decoration: none;
@@ -159,21 +159,21 @@ body {
   font-weight: 600;
   border: none;
   border-radius: 6px;
-  color: #fff;
+  color: #ffffff;
   cursor: pointer;
   text-transform: uppercase;
 }
 .nav-home {
-  background: #002855;
+  background: #ffc815;
 }
 .nav-intro {
-  background: #3accf8;
+  background: #874d10;
 }
 .nav-product {
-  background: #00c4f7;
+  background: #874d10;
 }
 .nav-login {
-  background: #00c6fa;
+  background: #874d10;
 }
 
 /* Popup Overlay */

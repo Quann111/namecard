@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auth – Mobile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* --- Mobile-first reset --- */
+    body{background:#e0e0e0;sans-serif;margin:0}
+    .wrap{
+      max-width:420px;margin:0 auto;padding:16px;
+      min-height:100dvh;display:flex;flex-direction:column;gap:16px
+    }
+
+    /* Card / form trắng (giữ style gốc, rút gọn) */
+    .form-container{
+      background:#fff;color:#243cfd;border-radius:12px;
+      box-shadow:0 4px 6px rgba(0,0,0,.06),0 10px 15px rgba(0,0,0,.1);
+      padding:20px 22px;display:flex;flex-direction:column;gap:14px
+    }
+    .form-container h2{font-size:20px;font-weight:900;margin:0 0 6px}
+    .tabs{
+      display:flex;gap:8px;background:#fff;border-radius:9999px;
+      box-shadow:0 4px 6px rgba(0,0,0,.06),0 10px 15px rgba(0,0,0,.1);
+      padding:6px
+    }
+    .tab-btn{
+      flex:1;border:none;border-radius:9999px;padding:10px 14px;
+      font-weight:700;cursor:pointer;background:transparent;color:#243cfd
+    }
+    .tab-btn.active{background:#243cfd;color:#fff;box-shadow:0 4px 7px #3b51f5aa}
+
+    /* Inputs (giữ tông & hiệu ứng từ bản gốc) */
+    input[type="text"],input[type="email"],input[type="password"],input[type="tel"]{
+      width:100%;padding:12px 14px;border-radius:10px;
+      border:1.5px solid #3b51f5;background:transparent;color:#333;
+      font-size:16px; /* tránh zoom iOS */ transition:border-color .25s ease
+    }
+    input::placeholder{opacity:.7}
+    input:focus{outline:none;border-color:#6c63ff;box-shadow:0 0 5px #6c63ff88}
+
+    /* Buttons (giữ màu của bản trắng) */
+    .btn{
+      width:100%;border:none;border-radius:9999px;padding:12px 16px;
+      font-weight:700;font-size:16px;cursor:pointer;user-select:none
+    }
+    .btn-primary{
+      background:#243cfd;color:#fff;box-shadow:0 4px 7px #3b51f5aa
+    }
+    .btn-primary:hover{background:#1a2fde;box-shadow:0 6px 12px #1a2fdec0}
+
+    /* Nhỏ gọn thêm trên màn rất nhỏ */
+    @media (max-width:360px){
+      .form-container{padding:16px}
+      .tab-btn{padding:9px 10px}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+
+    <!-- Tabs chuyển form -->
+    <div class="tabs" role="tablist" aria-label="Chuyển đổi đăng nhập / đăng ký">
+      <button id="tab-login" class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-login">
+        Đăng nhập
+      </button>
+      <button id="tab-register" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-register">
+        Đăng ký
+      </button>
+    </div>
+
+    <!-- LOGIN (white) -->
+    <form id="panel-login" class="form-container" role="tabpanel" aria-labelledby="tab-login">
+      <h2>Đăng nhập</h2>
+      <input type="text" name="username" placeholder="Tên đăng nhập" autocomplete="username" required />
+      <input type="password" name="password" placeholder="Mật khẩu" autocomplete="current-password" required />
+      <button type="submit" class="btn btn-primary">Đăng nhập</button>
+    </form>
+
+    <!-- REGISTER (white) -->
+    <form id="panel-register" class="form-container hidden" role="tabpanel" aria-labelledby="tab-register">
+      <h2>Đăng ký</h2>
+      <input type="text" name="fullname" placeholder="Họ và tên" autocomplete="name" required />
+      <input type="email" name="email" placeholder="E-mail" autocomplete="email" required />
+      <input type="tel" name="phone" placeholder="Số điện thoại" autocomplete="tel" required />
+      <input type="password" name="password" placeholder="Mật khẩu" autocomplete="new-password" required />
+      <input type="password" name="confirm_password" placeholder="Xác nhận mật khẩu" autocomplete="new-password" required />
+      <button type="submit" class="btn btn-primary">Tạo tài khoản</button>
+    </form>
+
+  </main>
+
+  <script>
+    // Toggle giữa Đăng nhập / Đăng ký – không dùng alert
+    const tabLogin   = document.getElementById('tab-login');
+    const tabRegister= document.getElementById('tab-register');
+    const panelLogin = document.getElementById('panel-login');
+    const panelReg   = document.getElementById('panel-register');
+
+    function activate(tab){
+      const isLogin = tab === 'login';
+      tabLogin.classList.toggle('active', isLogin);
+      tabRegister.classList.toggle('active', !isLogin);
+      tabLogin.setAttribute('aria-selected', isLogin);
+      tabRegister.setAttribute('aria-selected', !isLogin);
+      panelLogin.classList.toggle('hidden', !isLogin);
+      panelReg.classList.toggle('hidden', isLogin);
+    }
+    tabLogin.addEventListener('click',   () => activate('login'));
+    tabRegister.addEventListener('click',() => activate('register'));
+  </script>
+</body>
+</html>

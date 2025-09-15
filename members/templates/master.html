@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %}</title>
+
+  <!-- RẤT QUAN TRỌNG CHO MOBILE -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"><!-- nếu bạn có -->
+  {% block head %}{% endblock %}
+  <style>
+    /* reset nhẹ và font hệ thống */
+    html{-webkit-text-size-adjust:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f3f4f6}
+    a{color:inherit}
+    img{max-width:100%;display:block}
+  </style>
+</head>
+<body>
+  {% block content %}{% endblock %}
+</body>
+</html>

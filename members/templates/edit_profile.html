@@ -1,0 +1,124 @@
+{% extends "master.html" %}
+{% block title %}Edit Profile - {{ profile.full_name }}{% endblock %}
+
+{% block content %}
+<style>
+  :root{
+    --bg:#f3f4f6;        /* page bg */
+    --card:#ffffff;      /* card bg */
+    --text:#111827;      /* text */
+    --muted:#6b7280;     /* muted text */
+    --primary:#243cfd;   /* brand */
+    --primary-2:#1a2fde; /* hover */
+    --ring:#6c63ff;      /* focus ring */
+    --border:#e5e7eb;    /* borders */
+    --danger:#dc2626;    /* error */
+  }
+
+  .page-wrap{max-width:720px;margin:24px auto;padding:0 16px;}
+  .card{
+    background:var(--card);color:var(--text);
+    border-radius:14px;overflow:hidden;
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+  }
+  .card-head{
+    padding:18px 20px;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;gap:14px;
+  }
+  .card-head h1{margin:0;font-size:20px;font-weight:800;line-height:1.2;}
+  .subtitle{color:var(--muted);font-size:14px;margin-top:2px;}
+
+  /* avatar preview */
+  .avatar-box{display:flex;align-items:center;gap:16px;margin-top:10px;}
+  .avatar-box img{
+    width:96px;height:96px;object-fit:cover;border-radius:12px;
+    border:1px solid var(--border);box-shadow:0 4px 14px rgba(0,0,0,.06);
+  }
+
+  /* form */
+  .form-wrap{padding:20px;display:flex;flex-direction:column;gap:14px;}
+  .form-grid{display:block;} /* mobile: 1 cột */
+  .form-wrap p{margin:0;display:flex;flex-direction:column;gap:6px;}
+  .form-wrap label{font-weight:600;color:#1f2937;font-size:14px;}
+
+  /* áp thẳng style lên widget mặc định của Django */
+  .form-wrap input[type="text"],
+  .form-wrap input[type="email"],
+  .form-wrap input[type="password"],
+  .form-wrap input[type="url"],
+  .form-wrap input[type="tel"],
+  .form-wrap input[type="file"],
+  .form-wrap textarea,
+  .form-wrap select{
+    width:100%;box-sizing:border-box;
+    padding:12px 14px;border-radius:10px;
+    border:1.5px solid #3b51f5;background:#fff;color:#111;
+    font-size:16px; /* tránh iOS auto-zoom */
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .form-wrap textarea{min-height:110px;resize:vertical;}
+  .form-wrap input:focus,
+  .form-wrap textarea:focus,
+  .form-wrap select:focus{
+    outline:none;border-color:var(--ring);
+    box-shadow:0 0 0 4px rgba(108,99,255,.18);
+  }
+
+  /* file input */
+  .form-wrap input[type="file"]{padding:10px;}
+
+  /* actions */
+  .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:4px;}
+  .btn{border:none;border-radius:9999px;padding:12px 18px;font-weight:700;font-size:16px;cursor:pointer;user-select:none;}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 14px rgba(36,60,253,.28);}
+  .btn-primary:hover{background:var(--primary-2);}
+  .backlink{display:inline-flex;align-items:center;gap:8px;color:var(--primary);text-decoration:none;font-weight:700;}
+  .backlink:hover{text-decoration:underline;}
+
+  /* desktop ≥640px: 2 cột */
+  @media (min-width:640px){
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;}
+    .form-grid p{margin:0;}
+    .actions{grid-column:1/-1;}
+  }
+
+  /* màn cực nhỏ ≤360px */
+  @media (max-width:360px){
+    .card-head{padding:14px 16px;}
+    .form-wrap{padding:16px;}
+    .btn{width:100%;justify-content:center;}
+  }
+</style>
+
+<div class="page-wrap">
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <h1>Edit Profile</h1>
+        <div class="subtitle">{{ profile.full_name }}</div>
+
+        {% if profile.avatar %}
+        <div class="avatar-box">
+          <img src="{{ profile.avatar.url }}" alt="{{ profile.full_name }}">
+          <div class="subtitle">Current avatar preview</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="form-wrap">
+      <form method="POST" enctype="multipart/form-data" class="form-grid">
+        {% csrf_token %}
+
+        {# Dùng Django render mặc định, CSS trên sẽ áp vào toàn bộ #}
+        {{ form.as_p }}
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">Save changes</button>
+          <a class="backlink" href="{% url 'details' id=profile.id %}">← Back to details</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auth – Mobile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* --- Mobile-first reset --- */
+    body{background:#e0e0e0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0}
+    .wrap{max-width:420px;margin:0 auto;padding:16px;min-height:100dvh;display:flex;flex-direction:column;gap:16px}
+    /* Topbar Back */
+    .topbar{display:flex;justify-content:flex-start}
+    .btn-back{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 14px;border-radius:9999px;border:1.5px solid #3b51f5;
+      background:#fff;color:#243cfd;font-weight:700;text-decoration:none;
+      box-shadow:0 2px 5px rgba(0,0,0,.06)
+    }
+    .btn-back:hover{background:#f5f7ff}
+    /* Card / form trắng */
+    .form-container{background:#fff;color:#243cfd;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,.06),0 10px 15px rgba(0,0,0,.1);padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+    .form-container h2{font-size:20px;font-weight:900;margin:0 0 6px}
+    .tabs{display:flex;gap:8px;background:#fff;border-radius:9999px;box-shadow:0 4px 6px rgba(0,0,0,.06),0 10px 15px rgba(0,0,0,.1);padding:6px}
+    .tab-btn{flex:1;border:none;border-radius:9999px;padding:10px 14px;font-weight:700;cursor:pointer;background:transparent;color:#243cfd}
+    .tab-btn.active{background:#243cfd;color:#fff;box-shadow:0 4px 7px #3b51f5aa}
+    /* Inputs */
+    input[type="text"],input[type="email"],input[type="password"]{
+      width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #3b51f5;background:transparent;color:#333;font-size:16px;transition:border-color .25s ease
+    }
+    input::placeholder{opacity:.7}
+    input:focus{outline:none;border-color:#6c63ff;box-shadow:0 0 5px #6c63ff88}
+    /* Buttons */
+    .btn{width:100%;border:none;border-radius:9999px;padding:12px 16px;font-weight:700;font-size:16px;cursor:pointer;user-select:none}
+    .btn-primary{background:#243cfd;color:#fff;box-shadow:0 4px 7px #3b51f5aa}
+    .btn-primary:hover{background:#1a2fde;box-shadow:0 6px 12px #1a2fdec0}
+    /* Error + messages */
+    .messages{list-style:none;margin:0;padding:0}
+    .messages li{margin:6px 0;padding:10px;border-radius:8px;background:#fff}
+    .messages li.error{border:1px solid #ef4444;color:#b91c1c}
+    .messages li.success{border:1px solid #22c55e;color:#15803d}
+    .field-error{color:#b91c1c;font-size:14px;margin-top:-6px}
+    /* Ẩn */
+    .hidden{display:none}
+    @media (max-width:360px){
+      .form-container{padding:16px}
+      .tab-btn{padding:9px 10px}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" data-active-tab="{{ active_tab|default:'login' }}">
+    <!-- TOP: Back -->
+    <div class="topbar">
+      {% if request.GET.back %}
+        <a class="btn-back" href="{% url 'details' id=request.GET.back %}">← Quay lại chi tiết</a>
+      {% else %}
+        <a class="btn-back" href="javascript:void(0)" onclick="history.back()">← Quay lại</a>
+      {% endif %}
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist" aria-label="Chuyển đổi đăng nhập / đăng ký">
+      <button id="tab-login" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-login">Đăng nhập</button>
+      <button id="tab-register" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-register">Đăng ký</button>
+    </div>
+
+    <!-- LOGIN -->
+    <form id="panel-login" class="form-container" role="tabpanel" aria-labelledby="tab-login" method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      <h2>Đăng nhập</h2>
+
+      <input type="text" name="username" placeholder="Tên đăng nhập" autocomplete="username"
+             value="{{ login_form.username.value|default_if_none:'' }}" required />
+      {% if login_form.username.errors %}<div class="field-error">{{ login_form.username.errors|striptags }}</div>{% endif %}
+
+      <input type="password" name="password" placeholder="Mật khẩu" autocomplete="current-password" required />
+      {% if login_form.password.errors %}<div class="field-error">{{ login_form.password.errors|striptags }}</div>{% endif %}
+
+      {% if login_form.non_field_errors %}<div class="field-error">{{ login_form.non_field_errors|striptags }}</div>{% endif %}
+
+      <button type="submit" class="btn btn-primary">Đăng nhập</button>
+    </form>
+
+    <!-- REGISTER -->
+    <form id="panel-register" class="form-container hidden" role="tabpanel" aria-labelledby="tab-register" method="POST" action="{% url 'register' %}">
+      {% csrf_token %}
+      <h2>Đăng ký</h2>
+
+      <input type="text" name="username" placeholder="Tên đăng nhập" autocomplete="username"
+             value="{{ register_form.username.value|default_if_none:'' }}" required />
+      {% if register_form.username.errors %}<div class="field-error">{{ register_form.username.errors|striptags }}</div>{% endif %}
+
+      <input type="text" name="full_name" placeholder="Họ và tên" autocomplete="name"
+             value="{{ register_form.full_name.value|default_if_none:'' }}" required />
+      {% if register_form.full_name.errors %}<div class="field-error">{{ register_form.full_name.errors|striptags }}</div>{% endif %}
+
+      <input type="email" name="email" placeholder="E-mail" autocomplete="email"
+             value="{{ register_form.email.value|default_if_none:'' }}" required />
+      {% if register_form.email.errors %}<div class="field-error">{{ register_form.email.errors|striptags }}</div>{% endif %}
+
+      <input type="password" name="password" placeholder="Mật khẩu" autocomplete="new-password" required />
+      {% if register_form.password.errors %}<div class="field-error">{{ register_form.password.errors|striptags }}</div>{% endif %}
+
+      {% if register_form.non_field_errors %}<div class="field-error">{{ register_form.non_field_errors|striptags }}</div>{% endif %}
+
+      <button type="submit" class="btn btn-primary">Tạo tài khoản</button>
+    </form>
+  </main>
+
+  <script>
+    // Toggle giữa Đăng nhập / Đăng ký
+    const tabLogin    = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+    const panelLogin  = document.getElementById('panel-login');
+    const panelReg    = document.getElementById('panel-register');
+    const wrap        = document.querySelector('.wrap');
+
+    function activate(which){
+      const isLogin = which === 'login';
+      tabLogin.classList.toggle('active', isLogin);
+      tabRegister.classList.toggle('active', !isLogin);
+      tabLogin.setAttribute('aria-selected', isLogin);
+      tabRegister.setAttribute('aria-selected', !isLogin);
+      panelLogin.classList.toggle('hidden', !isLogin);
+      panelReg.classList.toggle('hidden', isLogin);
+    }
+    tabLogin.addEventListener('click',   () => activate('login'));
+    tabRegister.addEventListener('click',() => activate('register'));
+
+    // Khởi tạo tab theo context (mặc định login). Nếu form ĐK có lỗi, tự mở tab ĐK
+    (function initTab(){
+      const desired = wrap?.dataset?.activeTab || 'login';
+      const hasRegError = !!document.querySelector('#panel-register .field-error');
+      const initial = hasRegError ? 'register' : desired;
+      activate(initial);
+    })();
+  </script>
+</body>
+</html>

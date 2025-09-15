@@ -90,22 +90,38 @@
         <!-- Contact buttons với icon ảnh (dùng chung /media/avatars/icon.png) -->
         {% if profile.phone %}
         <a href="tel:{{ profile.phone }}" class="contact-btn">
-          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <img
+            src="{% static 'images/icon.png' %}"
+            class="icon-img"
+            alt="icon"
+          />
           <span>{{ profile.phone }}</span>
         </a>
         {% endif %} {% if profile.email %}
         <a href="mailto:{{ profile.email }}" class="contact-btn">
-          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <img
+            src="{% static 'images/icon.png' %}"
+            class="icon-img"
+            alt="icon"
+          />
           <span>{{ profile.email }}</span>
         </a>
         {% endif %} {% if profile.website %}
         <a href="{{ profile.website }}" target="_blank" class="contact-btn">
-          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <img
+            src="{% static 'images/icon.png' %}"
+            class="icon-img"
+            alt="icon"
+          />
           <span>{{ profile.website }}</span>
         </a>
         {% endif %} {% if profile.youtube %}
         <a href="{{ profile.youtube }}" target="_blank" class="contact-btn">
-          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <img
+            src="{% static 'images/icon.png' %}"
+            class="icon-img"
+            alt="icon"
+          />
           <span>YouTube</span>
         </a>
         {% endif %} {% if profile.zalo %}
@@ -114,12 +130,20 @@
           target="_blank"
           class="contact-btn"
         >
-          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <img
+            src="{% static 'images/icon.png' %}"
+            class="icon-img"
+            alt="icon"
+          />
           <span>Zalo</span>
         </a>
         {% endif %} {% if profile.viber %}
         <a href="viber://chat?number={{ profile.viber }}" class="contact-btn">
-          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <img
+            src="{% static 'images/icon.png' %}"
+            class="icon-img"
+            alt="icon"
+          />
           <span>Viber</span>
         </a>
         {% endif %}

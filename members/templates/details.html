@@ -60,7 +60,8 @@
         <div class="position">{{ profile.position }}</div>
         <div class="company">{{ profile.company }}</div>
 
-        <!-- Nút mở popup -->
+        <!-- Nút mở popup với icon -->
+        <!-- Nút mở popup với icon -->
         <div class="button-group">
           <a
             id="saveContact"
@@ -68,42 +69,62 @@
             href="{% url 'download_vcf' profile.id %}"
             download
           >
-            LƯU DANH BẠ
+            <img
+              class="icon-img-luudanhba-chiase"
+              src="/media/avatars/icon.png"
+              alt="icon"
+            />
+            <p class="btn-text">LƯU DANH BẠ</p>
           </a>
-          <label for="toggle-share" class="button glow-btn" role="button"
-            >CHIA SẺ</label
-          >
+
+          <label for="toggle-share" class="button glow-btn" role="button">
+            <img
+              class="icon-img-luudanhba-chiase"
+              src="/media/avatars/icon.png"
+              alt="icon"
+            />
+            <p class="btn-text">CHIA SẺ</p>
+          </label>
         </div>
 
+        <!-- Contact buttons với icon ảnh (dùng chung /media/avatars/icon.png) -->
         {% if profile.phone %}
-        <a href="tel:{{ profile.phone }}" class="contact-btn"
-          >📞 {{ profile.phone }}</a
-        >
+        <a href="tel:{{ profile.phone }}" class="contact-btn">
+          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <span>{{ profile.phone }}</span>
+        </a>
         {% endif %} {% if profile.email %}
-        <a href="mailto:{{ profile.email }}" class="contact-btn"
-          >✉️ {{ profile.email }}</a
-        >
+        <a href="mailto:{{ profile.email }}" class="contact-btn">
+          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <span>{{ profile.email }}</span>
+        </a>
         {% endif %} {% if profile.website %}
-        <a href="{{ profile.website }}" target="_blank" class="contact-btn"
-          >🌐 {{ profile.website }}</a
-        >
+        <a href="{{ profile.website }}" target="_blank" class="contact-btn">
+          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <span>{{ profile.website }}</span>
+        </a>
         {% endif %} {% if profile.youtube %}
-        <a href="{{ profile.youtube }}" target="_blank" class="contact-btn"
-          >▶ YouTube</a
-        >
+        <a href="{{ profile.youtube }}" target="_blank" class="contact-btn">
+          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <span>YouTube</span>
+        </a>
         {% endif %} {% if profile.zalo %}
         <a
           href="https://zalo.me/{{ profile.zalo }}"
           target="_blank"
           class="contact-btn"
-          >💬 Zalo</a
         >
+          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <span>Zalo</span>
+        </a>
         {% endif %} {% if profile.viber %}
-        <a href="viber://chat?number={{ profile.viber }}" class="contact-btn"
-          >📱 Viber</a
-        >
+        <a href="viber://chat?number={{ profile.viber }}" class="contact-btn">
+          <img src="/media/avatars/icon.png" class="icon-img" alt="icon" />
+          <span>Viber</span>
+        </a>
         {% endif %}
 
+        <!-- Navigation -->
         <div class="nav-buttons">
           <button class="nav-button nav-home">Trang Chủ</button>
           <button class="nav-button nav-intro">Giới Thiệu</button>
@@ -175,7 +196,6 @@
           modalImg.removeAttribute("src");
         }
 
-        // Avatar click -> chỉ mở avatar
         if (avatar) {
           avatar.style.cursor = "zoom-in";
           avatar.addEventListener("click", function (e) {
@@ -184,11 +204,10 @@
           });
         }
 
-        // Header click -> chỉ mở background
         if (header && bgUrl) {
           header.style.cursor = "zoom-in";
           header.addEventListener("click", function (e) {
-            if (e.target.closest("#profileAvatar")) return; // tránh avatar
+            if (e.target.closest("#profileAvatar")) return;
             openModal(bgUrl);
           });
         }

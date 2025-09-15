@@ -9,7 +9,6 @@ import qrcode
 # ===== Django
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
-from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
@@ -24,7 +23,7 @@ from .models import Profile
 # Danh sách Profile
 def members(request):
     profiles = Profile.objects.all().values()
-    template = loader.get_template('template.html')
+    template = loader.get_template("template.html")
     context = {"profiles": profiles}
     return HttpResponse(template.render(context, request))
 
@@ -37,14 +36,14 @@ def details(request, id):
 
 # Trang main
 def main(request):
-    template = loader.get_template('main.html')
+    template = loader.get_template("main.html")
     return HttpResponse(template.render({}, request))
 
 
 # Ví dụ testing
 def testing(request):
-    template = loader.get_template('template.html')
-    context = {"fruits": ['Apple', 'Banana', 'Cherry']}
+    template = loader.get_template("template.html")
+    context = {"fruits": ["Apple", "Banana", "Cherry"]}
     return HttpResponse(template.render(context, request))
 
 
@@ -62,7 +61,8 @@ def edit_profile(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, "Cập nhật thành công!")
-            return redirect("details", id=profile.id)
+            # reload lại chính trang edit_profile để thấy link mới
+            return redirect("edit_profile", id=profile.id)
     else:
         form = ProfileForm(instance=profile)
 
@@ -75,9 +75,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             profile = form.save(commit=False)
-            # NOTE: nếu bạn dùng check_password để login,
-            # hãy đảm bảo password đã được hash khi lưu (make_password)
-            # profile.password = make_password(form.cleaned_data["password"])
+            # nếu dùng check_password khi login thì nhớ hash trước khi save
             profile.save()
             messages.success(request, "Đăng ký thành công! Hãy đăng nhập.")
             return redirect("login")
@@ -98,7 +96,6 @@ def login_view(request):
                 profile = Profile.objects.get(username=username)
                 if check_password(password, profile.password):
                     request.session["user_id"] = profile.id
-                    print(">>> LOGIN OK, user_id:", request.session["user_id"])
                     messages.success(request, "Đăng nhập thành công!")
                     return redirect(reverse("edit_profile", args=[profile.id]))
                 else:
@@ -118,11 +115,11 @@ def logout_view(request):
     return redirect("login")
 
 
-# --- Tải VCF (kèm avatar base64 & đầy đủ thông tin) ---
+# --- Tải VCF ---
 def _fold(line, limit=75):
     if len(line) <= limit:
         return line
-    return "\r\n ".join(line[i:i+limit] for i in range(0, len(line), limit))
+    return "\r\n ".join(line[i : i + limit] for i in range(0, len(line), limit))
 
 
 def download_vcf(request, id):
@@ -153,11 +150,15 @@ def download_vcf(request, id):
     if profile.youtube:
         lines.append(_fold(f"X-SOCIALPROFILE;type=youtube:{profile.youtube}"))
     if profile.zalo:
-        lines.append(_fold(f"X-SOCIALPROFILE;type=zalo:https://zalo.me/{profile.zalo}"))
+        lines.append(
+            _fold(f"X-SOCIALPROFILE;type=zalo:https://zalo.me/{profile.zalo}")
+        )
     if profile.viber:
-        lines.append(_fold(f"X-SOCIALPROFILE;type=viber:viber://chat?number={profile.viber}"))
+        lines.append(
+            _fold(f"X-SOCIALPROFILE;type=viber:viber://chat?number={profile.viber}")
+        )
 
-    # ✅ Avatar dùng URL trực tiếp từ Cloudinary
+    # Avatar Cloudinary
     if profile.avatar:
         lines.append(_fold(f"PHOTO;VALUE=uri:{profile.avatar.url}"))
 
@@ -173,7 +174,8 @@ def download_vcf(request, id):
     )
     return response
 
-# --- QR code cho link details ---
+
+# --- QR code ---
 def qr_code(request, id):
     profile = get_object_or_404(Profile, id=id)
     detail_url = request.build_absolute_uri(f"/members/{profile.id}/")
@@ -184,10 +186,8 @@ def qr_code(request, id):
     return response
 
 
-from .forms import LoginForm, RegisterForm
-
+# --- Tabs ---
 def auth_tabs(request):
-    # mặc định
     ctx = {
         "login_form": LoginForm(),
         "register_form": RegisterForm(),

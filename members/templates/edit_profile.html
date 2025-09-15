@@ -1,6 +1,5 @@
 {% extends "master.html" %} {% load static %} {% block title %}Edit Profile - {{
 profile.full_name }}{% endblock %} {% block content %}
-
 <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}" />
 
 <div class="page-wrap">
@@ -10,63 +9,52 @@ profile.full_name }}{% endblock %} {% block content %}
       <div class="name">{{ profile.full_name }}</div>
     </div>
 
-    <!-- Avatar -->
-    <div class="media-box">
-      {% if profile.avatar %}
-      <img
-        src="{{ profile.avatar.url }}"
-        alt="Avatar {{ profile.full_name }}"
-      />
-      {% else %}
-      <img
-        src="{% static 'images/default-avatar.png' %}"
-        alt="Default Avatar"
-      />
-      {% endif %}
-      <div class="upload-info">
-        <div class="subtitle">Upload new avatar</div>
-        <input
-          type="file"
-          name="avatar"
-          id="id_avatar"
-          hidden
-          accept="image/*"
+    <!-- Form duy nhất -->
+    <form id="profileForm" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- Avatar -->
+      <div class="media-box">
+        <img
+          id="previewAvatar"
+          src="{% if profile.avatar %}{{ profile.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}"
+          alt="Avatar {{ profile.full_name }}"
         />
-        <label for="id_avatar" class="file-input">Chọn ảnh</label>
+        <div class="upload-info">
+          <div class="subtitle">Upload new avatar</div>
+          <input
+            type="file"
+            name="avatar"
+            id="id_avatar"
+            hidden
+            accept="image/*"
+          />
+          <label for="id_avatar" class="file-input">Chọn ảnh</label>
+        </div>
       </div>
-    </div>
 
-    <!-- Background -->
-    <div class="media-box">
-      {% if profile.background %}
-      <img
-        src="{{ profile.background.url }}"
-        alt="Background {{ profile.full_name }}"
-      />
-      {% else %}
-      <img
-        src="{% static 'images/default-bg.png' %}"
-        alt="Default Background"
-      />
-      {% endif %}
-      <div class="upload-info">
-        <div class="subtitle">Upload new background</div>
-        <input
-          type="file"
-          name="background"
-          id="id_background"
-          hidden
-          accept="image/*"
+      <!-- Background -->
+      <div class="media-box">
+        <img
+          id="previewBackground"
+          src="{% if profile.background %}{{ profile.background.url }}{% else %}{% static 'images/default-bg.png' %}{% endif %}"
+          alt="Background {{ profile.full_name }}"
         />
-        <label for="id_background" class="file-input">Chọn ảnh</label>
+        <div class="upload-info">
+          <div class="subtitle">Upload new background</div>
+          <input
+            type="file"
+            name="background"
+            id="id_background"
+            hidden
+            accept="image/*"
+          />
+          <label for="id_background" class="file-input">Chọn ảnh</label>
+        </div>
       </div>
-    </div>
 
-    <!-- Form fields -->
-    <div class="form-wrap">
-      <form id="profileForm" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-
+      <!-- Form fields -->
+      <div class="form-wrap">
         <div class="form-field">
           <label for="id_username">Username</label>
           {{ form.username }}
@@ -122,10 +110,11 @@ profile.full_name }}{% endblock %} {% block content %}
           {{ form.viber }}
         </div>
 
+        <!-- Action buttons -->
         <div class="actions">
           <div class="uiverse">
             <span class="tooltip">Lưu lại thay đổi</span>
-            <button type="button" id="saveBtn">Save changes</button>
+            <button type="submit" id="saveBtn">Save changes</button>
           </div>
 
           <div class="uiverse">
@@ -133,39 +122,73 @@ profile.full_name }}{% endblock %} {% block content %}
             <a href="{% url 'details' id=profile.id %}" id="backLink">← Back</a>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 </div>
-
 {% endblock %}
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const saveBtn = document.getElementById("saveBtn");
-    const backLink = document.getElementById("backLink");
     const form = document.getElementById("profileForm");
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
+    function handleImageUpload(input, imgId) {
+      const file = input.files[0];
+      if (!file) return;
+
+      if (file.size > MAX_SIZE) {
+        alert("Ảnh quá lớn! Giới hạn tối đa 10MB.");
+        input.value = "";
+        return;
+      }
+
+      // Preview tạm
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById(imgId).src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      // Submit ngay để lưu + reload trang
+      form.submit();
+    }
+
+    // Avatar
+    const avatarInput = document.getElementById("id_avatar");
+    if (avatarInput) {
+      avatarInput.addEventListener("change", function () {
+        handleImageUpload(this, "previewAvatar");
+      });
+    }
+
+    // Background
+    const bgInput = document.getElementById("id_background");
+    if (bgInput) {
+      bgInput.addEventListener("change", function () {
+        handleImageUpload(this, "previewBackground");
+      });
+    }
+
+    // Nút Save
+    const saveBtn = document.getElementById("saveBtn");
     if (saveBtn) {
       saveBtn.addEventListener("click", function () {
         saveBtn.disabled = true;
         saveBtn.textContent = "Processing...";
-
-        setTimeout(() => {
-          form.submit();
-        }, 2000);
       });
     }
 
+    // Nút Back
+    const backLink = document.getElementById("backLink");
     if (backLink) {
       backLink.addEventListener("click", function (e) {
         e.preventDefault();
         const url = backLink.getAttribute("href");
-
         backLink.textContent = "Loading...";
         setTimeout(() => {
           window.location.href = url;
-        }, 2000);
+        }, 1200);
       });
     }
   });

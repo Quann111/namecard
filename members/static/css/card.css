@@ -1,6 +1,6 @@
 :root {
   --primary: #001e55;
-  --secondary: #003366;
+  --secondary: #ffc815;
   --light-bg: #f9fafd;
   --gray-text: #666;
 }
@@ -15,7 +15,7 @@
 /* Body */
 body {
   font-family: "Segoe UI", sans-serif;
-  background-color: #fff;
+  background-color: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -65,6 +65,7 @@ body {
   padding: 12vh 5% 5%;
   text-align: center;
   overflow-y: auto;
+  background: #313131;
 }
 .name {
   font-size: 2.5vh;
@@ -74,16 +75,15 @@ body {
 }
 .position {
   font-size: 1.8vh;
-  color: #000f47;
+  color: #ffffff;
   margin-bottom: 0.3vh;
 }
 .company {
   font-size: 1.7vh;
-  color: #000f47;
+  color: #ffffff;
   margin-bottom: 3vh;
 }
-
-/* Button top */
+/* Button group (2 nút trên cùng) */
 .button-group {
   display: flex;
   justify-content: center;
@@ -92,16 +92,30 @@ body {
 }
 .button {
   flex: 1;
-  background: #00377b;
-  color: #4bcffa;
+  background: #ffc815;
+  color: #222224;
   font-size: 1.8vh;
   font-weight: 600;
   padding: 1.2vh 0;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   text-decoration: none;
+
+  /* Flex để icon + text giữa */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
+
+.button img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+/* Hover hiệu ứng */
 .button:hover {
   background: #0fbcf9;
   color: #fff;
@@ -109,10 +123,10 @@ body {
 
 /* Contact buttons */
 .contact-btn {
-  position: relative;
   display: flex;
   align-items: center;
-  padding: 1.2vh 1vh 1.2vh 4.5vh;
+  gap: 10px;
+  padding: 1.2vh 1.5vh;
   margin-bottom: 1.5vh;
   width: 100%;
   border: 1px solid var(--secondary);
@@ -123,6 +137,13 @@ body {
   text-align: left;
   cursor: pointer;
   text-decoration: none;
+}
+
+.contact-btn .icon-img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 /* Nav Buttons */
@@ -207,9 +228,10 @@ body {
 }
 
 /* Glow button */
+/* Glow button có icon + text tách riêng */
 .glow-btn {
-  background: #00377b;
-  color: #ffffff;
+  background: #ffc815;
+  color: #222224;
   padding: 12px 20px;
   border: none;
   border-radius: 5px;
@@ -218,8 +240,30 @@ body {
   cursor: pointer;
   text-decoration: none;
   transition: box-shadow 0.3s ease, transform 0.2s ease;
-  display: inline-block;
+
+  display: inline-flex; /* flex để xếp icon + text */
+  align-items: center; /* căn giữa dọc */
+  justify-content: unset; /* căn giữa ngang */
+  gap: 8px; /* khoảng cách giữa icon và text */
+  padding: 1.2vh 1.5vh; /* padding trong button */
 }
+
+/* Icon */
+.icon-img-luudanhba-chiase {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+/* Text trong nút */
+.btn-text {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-size: 13px;
+  font-weight: bold;
+}
+
 .glow-btn:hover {
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
   transform: scale(1.05);

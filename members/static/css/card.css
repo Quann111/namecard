@@ -294,8 +294,8 @@ body {
 }
 .image-modal .close {
   position: absolute;
-  top: 20px;
-  right: 35px;
+  top: 3px;
+  right: 30px;
   color: #fff;
   font-size: 40px;
   font-weight: bold;

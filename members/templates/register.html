@@ -1,12 +1,8 @@
-{% extends "master.html" %}
-
-{% block title %}Đăng ký{% endblock %}
-
-{% block content %}
+{% extends "master.html" %} {% block title %}Đăng ký{% endblock %} {% block
+content %}
 <h1>Đăng ký tài khoản</h1>
 <form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
+  {% csrf_token %} {{ form.as_p }}
   <button type="submit">Đăng ký</button>
 </form>
 <p>Bạn đã có tài khoản? <a href="{% url 'login' %}">Đăng nhập</a></p>

@@ -116,6 +116,8 @@
 
       <button type="submit" class="btn btn-primary">Tạo tài khoản</button>
     </form>
+    {% include "navigation.html" with profile=profile current_id=profile.id %}
+
   </main>
 
   <script>

@@ -8,6 +8,12 @@ class Profile(models.Model):
     full_name = models.CharField(max_length=100)
     position = models.CharField(max_length=100, blank=True, null=True)
     company = models.CharField(max_length=200, blank=True, null=True)
+    
+        # --- Cấu hình hiển thị Navigation (mới) ---
+    show_home = models.BooleanField(default=True, help_text="Hiện nút Trang chủ")
+    show_intro = models.BooleanField(default=True, help_text="Hiện nút Giới thiệu")
+    show_products = models.BooleanField(default=True, help_text="Hiện nút Sản phẩm")
+    show_auth = models.BooleanField(default=True, help_text="Hiện nút Đăng nhập")
 
     # Ảnh đại diện và ảnh nền
     avatar = CloudinaryField("image", blank=True, null=True)

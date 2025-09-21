@@ -12,11 +12,11 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = [
             "username", "password", "full_name", "position", "company",
-            "avatar", "background",   # ✅ phải có trong form thì mới upload ảnh mới được
-            "phone", "email", "website", "youtube", "zalo", "viber"
+            "phone", "email", "website", "youtube", "zalo", "viber",
+            # các cờ hiển thị nav
+            "show_home", "show_intro", "show_products", "show_auth",
         ]
         widgets = {
-            # Dùng PasswordInput để che mật khẩu khi nhập
             "password": forms.PasswordInput(render_value=True),
         }
 

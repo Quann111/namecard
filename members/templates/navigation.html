@@ -3,20 +3,23 @@
   .nav-bar {
     position: fixed;
     bottom: 0;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    background: transparent;
+    left: 0;
+    right: 0;
+    display: flex; /* dùng flex cho canh giữa */
+    justify-content: center; /* luôn canh giữa */
+    align-items: center;
+    gap: 6px; /* khoảng cách giữa nút */
     padding: 6px;
-    gap: 3px;
-    justify-items: center;
+    background: transparent;
     z-index: 1000;
+    flex-wrap: wrap; /* phòng khi nhỏ màn hình */
   }
 
   .nav-bar .nav-button {
     display: inline-block;
+    min-width: 70px; /* nút không quá bé */
     padding: 10px 16px;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 600;
     border: none;
     border-radius: 6px;
@@ -45,38 +48,60 @@
     cursor: not-allowed;
     pointer-events: none;
   }
-</style>
 
+  /* Mobile responsive */
+  @media (max-width: 600px) {
+    .nav-bar {
+      gap: 4px;
+    }
+    .nav-bar .nav-button {
+      flex: 1; /* nút tự giãn đều chiều ngang */
+      min-width: unset;
+      font-size: 9px;
+      padding: 8px 10px;
+    }
+  }
+</style>
+{% with p=profile %}
 <div class="nav-bar">
   <!-- Trang Chủ -->
+  {% if not p or p.show_home %}
   <a
     href="{% if current_id %}{% url 'details' current_id %}{% else %}{% url 'members' %}{% endif %}"
     class="nav-button {% if '/members/' in request.path and not '/products/' in request.path and not '/edit/' in request.path %}active{% endif %}"
   >
     Trang Chủ
   </a>
+  {% endif %}
 
   <!-- Giới Thiệu -->
+  {% if not p or p.show_intro %}
   <a
     href="{% url 'template_intro' %}"
     class="nav-button {% if request.path == '/intro/' %}active{% endif %}"
   >
     Giới Thiệu
   </a>
+  {% endif %}
 
   <!-- Sản Phẩm -->
+  {% if not p or p.show_products %}
   <a
     href="{% if current_id %}{% url 'template_product' current_id %}{% else %}{% url 'members' %}{% endif %}"
     class="nav-button {% if '/products/' in request.path %}active{% endif %}"
   >
     Sản Phẩm
   </a>
+  {% endif %}
 
   <!-- Đăng Nhập -->
+  {% if not p or p.show_auth %}
   <a
     href="{% url 'auth_tabs' %}"
     class="nav-button {% if request.path == '/auth/' %}active{% endif %}"
   >
     Đăng Nhập
   </a>
+  {% endif %}
 </div>
+{% endwith %}

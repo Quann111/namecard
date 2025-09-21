@@ -84,11 +84,37 @@ profile.full_name }}{% endblock %} {% block content %}
         <div class="form-field"><label>Zalo</label>{{ form.zalo }}</div>
         <div class="form-field"><label>Viber</label>{{ form.viber }}</div>
 
-        <div class="actions">
-          <button type="submit" name="save_profile" id="saveBtn">
-            Save changes
+        <div class="form-field nav-checkboxes">
+          <label>Hiển thị Navigation</label>
+
+          <label>
+            {{ form.show_home }}
+            <span>Trang Chủ</span>
+          </label>
+
+          <label>
+            {{ form.show_intro }}
+            <span>Giới Thiệu</span>
+          </label>
+
+          <label>
+            {{ form.show_products }}
+            <span>Sản Phẩm</span>
+          </label>
+
+          <label>
+            {{ form.show_auth }}
+            <span>Đăng Nhập</span>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" name="save_profile" class="btn-save">
+            💾 Lưu thay đổi
           </button>
-          <a href="{% url 'details' id=profile.id %}" id="backLink">← Back</a>
+          <a href="{% url 'details' id=profile.id %}" class="btn-back"
+            >← Quay lại</a
+          >
         </div>
       </div>
     </form>
@@ -103,6 +129,12 @@ profile.full_name }}{% endblock %} {% block content %}
           class="product-thumb"
           src="{{ product.thumbnail.url }}"
           alt="{{ product.title }}"
+        />
+        {% else %}
+        <img
+          class="product-thumb"
+          src="{% static 'images/biaquen.png' %}"
+          alt="Default Product"
         />
         {% endif %}
 
@@ -158,6 +190,15 @@ profile.full_name }}{% endblock %} {% block content %}
             <div class="form-field">
               <label>Thumbnail</label>
               <input type="file" name="thumbnail" accept="image/*" />
+            </div>
+            <div class="form-field">
+              <label>Video URL</label>
+              <input
+                type="url"
+                name="video_url"
+                value="{{ product.video_url }}"
+                placeholder="https://..."
+              />
             </div>
 
             <div class="product-actions">

@@ -184,7 +184,7 @@
     </div>
 
     <!-- Navigation (gọi từ file riêng) -->
-    {% include "navigation.html" %}
+    {% include "navigation.html" with profile=profile current_id=profile.id %}
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -228,6 +228,6 @@
         };
       });
     </script>
-    <script src="{% static 'js/card.js' %}"></script>
   </body>
 </html>
+<script src="{% static 'js/card.js' %}"></script>

@@ -106,6 +106,7 @@ def edit_profile(request, id):
     if request.method == "POST" and "update_product" in request.POST:
         product_id = request.POST.get("product_id")
         product = get_object_or_404(Product, id=product_id, owner=profile)
+        product.video_url = request.POST.get("video_url", product.video_url)   # ✅ thêm dòng này
 
         product.title = request.POST.get("title", product.title)
         product.description = request.POST.get("description", product.description)

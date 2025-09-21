@@ -5,6 +5,7 @@ from urllib.parse import quote
 
 # ===== Third-party
 import qrcode
+import cloudinary.uploader   # ✅ thêm import
 
 # ===== Django
 from django.contrib import messages
@@ -14,20 +15,21 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.urls import reverse
 from django.utils.text import slugify
-from .models import Product
-from .forms import ProductForm
 
 # ===== Local apps
-from .forms import ProfileForm, RegisterForm, LoginForm
-from .models import Profile
+from .models import Profile, Product
+from .forms import ProfileForm, RegisterForm, LoginForm, ProductForm
+
 
 def template_product(request):
     return render(request, "product.html")
 
+
 def template_intro(request):
     return render(request, "intro.html", {
-        "current_id": request.session.get("user_id")  # truyền vào nếu có
+        "current_id": request.session.get("user_id")
     })
+
 
 # Danh sách Profile
 def members(request):
@@ -37,21 +39,20 @@ def members(request):
     return HttpResponse(template.render(context, request))
 
 
-# --- DETAILS (ai cũng xem được) ---
+# --- DETAILS ---
 def details(request, id):
     profile = get_object_or_404(Profile, id=id)
     return render(request, "details.html", {
         "profile": profile,
-        "current_id": id,   # truyền id xuống template
+        "current_id": id,
     })
 
-# Trang main
+
 def main(request):
     template = loader.get_template("main.html")
     return HttpResponse(template.render({}, request))
 
 
-# Ví dụ testing
 def testing(request):
     template = loader.get_template("template.html")
     context = {"fruits": ["Apple", "Banana", "Cherry"]}
@@ -62,62 +63,82 @@ def testing(request):
 def edit_profile(request, id):
     profile = get_object_or_404(Profile, id=id)
 
-    # Check quyền
     if "user_id" not in request.session or request.session["user_id"] != profile.id:
         messages.error(request, "Bạn không có quyền sửa thông tin này.")
         return redirect("details", id=id)
 
-    # ====== PROFILE UPDATE ======
-    if request.method == "POST" and "save_profile" in request.POST:
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Cập nhật hồ sơ thành công!")
-            return redirect("edit_profile", id=profile.id)
-    else:
-        form = ProfileForm(instance=profile)
-
-    # ✅ luôn khởi tạo product_form mặc định
+    form = ProfileForm(instance=profile)
     product_form = ProductForm()
 
-    # ====== ADD PRODUCT ======
-    if request.method == "POST" and "add_product" in request.POST:
-        product_form = ProductForm(request.POST, request.FILES)
-        if product_form.is_valid():
-            product = product_form.save(commit=False)
-            product.owner = profile
-            product.save()
-            messages.success(request, "Đã thêm sản phẩm mới!")
-            return redirect("edit_profile", id=profile.id)
-    if request.method == "POST" and "save_profile" in request.POST:
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
-
+    if request.method == "POST":
+        # --- Xóa avatar ---
         if "delete_avatar" in request.POST:
-            profile.avatar = None
-        if "delete_background" in request.POST:
-            profile.background = None
+            if profile.avatar:
+                public_id = getattr(profile.avatar, "public_id", None)
+                if public_id:
+                    cloudinary.uploader.destroy(public_id)
+                profile.avatar = None
+                profile.save()
+            messages.success(request, "Đã xóa avatar.")
+            return redirect("edit_profile", id=profile.id)
 
+        # --- Xóa background ---
+        if "delete_background" in request.POST:
+            if profile.background:
+                public_id = getattr(profile.background, "public_id", None)
+                if public_id:
+                    cloudinary.uploader.destroy(public_id)
+                profile.background = None
+                profile.save()
+            messages.success(request, "Đã xóa background.")
+            return redirect("edit_profile", id=profile.id)
+
+        # --- Cập nhật hồ sơ (bao gồm upload ảnh) ---
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
+            # Nếu có avatar mới -> xóa avatar cũ
+            if request.FILES.get("avatar"):
+                if profile.avatar:
+                    public_id = getattr(profile.avatar, "public_id", None)
+                    if public_id:
+                        cloudinary.uploader.destroy(public_id)
+                profile.avatar = request.FILES["avatar"]
+
+            # Nếu có background mới -> xóa background cũ
+            if request.FILES.get("background"):
+                if profile.background:
+                    public_id = getattr(profile.background, "public_id", None)
+                    if public_id:
+                        cloudinary.uploader.destroy(public_id)
+                profile.background = request.FILES["background"]
+
             form.save()
             messages.success(request, "Cập nhật hồ sơ thành công!")
             return redirect("edit_profile", id=profile.id)
 
-    # ====== UPDATE PRODUCT ======
-    if request.method == "POST" and "update_product" in request.POST:
-        product_id = request.POST.get("product_id")
-        product = get_object_or_404(Product, id=product_id, owner=profile)
-        product.video_url = request.POST.get("video_url", product.video_url)   # ✅ thêm dòng này
+        # --- Thêm sản phẩm ---
+        if "add_product" in request.POST:
+            product_form = ProductForm(request.POST, request.FILES)
+            if product_form.is_valid():
+                product = product_form.save(commit=False)
+                product.owner = profile
+                product.save()
+                messages.success(request, "Đã thêm sản phẩm mới!")
+                return redirect("edit_profile", id=profile.id)
 
-        product.title = request.POST.get("title", product.title)
-        product.description = request.POST.get("description", product.description)
-        if request.FILES.get("thumbnail"):
-            product.thumbnail = request.FILES["thumbnail"]
+        # --- Cập nhật sản phẩm ---
+        if "update_product" in request.POST:
+            product_id = request.POST.get("product_id")
+            product = get_object_or_404(Product, id=product_id, owner=profile)
+            product.title = request.POST.get("title", product.title)
+            product.description = request.POST.get("description", product.description)
+            product.video_url = request.POST.get("video_url", product.video_url)
+            if request.FILES.get("thumbnail"):
+                product.thumbnail = request.FILES["thumbnail"]
+            product.save()
+            messages.success(request, "Cập nhật sản phẩm thành công!")
+            return redirect("edit_profile", id=profile.id)
 
-        product.save()
-        messages.success(request, "Cập nhật sản phẩm thành công!")
-        return redirect("edit_profile", id=profile.id)
-
-    # ====== Lấy danh sách sản phẩm ======
     products = profile.products.all()
 
     return render(request, "edit_profile.html", {
@@ -127,13 +148,13 @@ def edit_profile(request, id):
         "product_form": product_form,
     })
 
+
 # --- REGISTER ---
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
             profile = form.save(commit=False)
-            # nếu dùng check_password khi login thì nhớ hash trước khi save
             profile.save()
             messages.success(request, "Đăng ký thành công! Hãy đăng nhập.")
             return redirect("login")
@@ -173,16 +194,15 @@ def logout_view(request):
     return redirect("login")
 
 
-# --- Tải VCF ---
+# --- VCF ---
 def _fold(line, limit=75):
     if len(line) <= limit:
         return line
-    return "\r\n ".join(line[i : i + limit] for i in range(0, len(line), limit))
+    return "\r\n ".join(line[i: i + limit] for i in range(0, len(line), limit))
 
 
 def download_vcf(request, id):
     profile = get_object_or_404(Profile, id=id)
-
     full_name = profile.full_name or profile.username or "Contact"
     n_field = f"N:{full_name};;;;"
 
@@ -204,19 +224,13 @@ def download_vcf(request, id):
     if profile.website:
         lines.append(_fold(f"URL:{profile.website}"))
 
-    # Social/app chat
     if profile.youtube:
         lines.append(_fold(f"X-SOCIALPROFILE;type=youtube:{profile.youtube}"))
     if profile.zalo:
-        lines.append(
-            _fold(f"X-SOCIALPROFILE;type=zalo:https://zalo.me/{profile.zalo}")
-        )
+        lines.append(_fold(f"X-SOCIALPROFILE;type=zalo:https://zalo.me/{profile.zalo}"))
     if profile.viber:
-        lines.append(
-            _fold(f"X-SOCIALPROFILE;type=viber:viber://chat?number={profile.viber}")
-        )
+        lines.append(_fold(f"X-SOCIALPROFILE;type=viber:viber://chat?number={profile.viber}"))
 
-    # Avatar Cloudinary
     if profile.avatar:
         lines.append(_fold(f"PHOTO;VALUE=uri:{profile.avatar.url}"))
 
@@ -237,7 +251,6 @@ def download_vcf(request, id):
 def qr_code(request, id):
     profile = get_object_or_404(Profile, id=id)
     detail_url = request.build_absolute_uri(f"/members/{profile.id}/")
-
     img = qrcode.make(detail_url)
     response = HttpResponse(content_type="image/png")
     img.save(response, "PNG")
@@ -254,6 +267,7 @@ def auth_tabs(request):
     return render(request, "auth_tabs.html", ctx)
 
 
+# --- Product ---
 def template_product(request, id):
     profile = get_object_or_404(Profile, id=id)
     products = profile.products.all()
@@ -266,8 +280,6 @@ def template_product(request, id):
 
 def add_product(request, id):
     profile = get_object_or_404(Profile, id=id)
-
-    # ✅ chỉ cho chính chủ
     if request.session.get("user_id") != profile.id:
         messages.error(request, "Bạn không có quyền thêm sản phẩm cho người khác.")
         return redirect("template_product", id=id)
@@ -286,8 +298,6 @@ def add_product(request, id):
 
 def edit_product(request, id, product_id):
     product = get_object_or_404(Product, id=product_id, owner_id=id)
-
-    # ✅ chỉ cho chính chủ
     if request.session.get("user_id") != product.owner.id:
         messages.error(request, "Bạn không có quyền sửa sản phẩm này.")
         return redirect("template_product", id=id)
@@ -304,10 +314,9 @@ def edit_product(request, id, product_id):
 
 def delete_product(request, id, product_id):
     product = get_object_or_404(Product, id=product_id, owner_id=id)
-
     if request.session.get("user_id") != product.owner.id:
         messages.error(request, "Bạn không có quyền xóa sản phẩm này.")
         return redirect("edit_profile", id=id)
 
     product.delete()
-    return redirect("edit_profile", id=id)   # 🔥 đổi sang edit_profile
+    return redirect("edit_profile", id=id)

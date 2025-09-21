@@ -22,7 +22,7 @@ profile.full_name }}{% endblock %} {% block content %}
       <div class="media-box">
         <img
           id="previewAvatar"
-          src="{% if profile.avatar %}{{ profile.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}"
+          src="{% if profile.avatar %}{{ profile.avatar.url }}{% else %}{% static 'images/humandefau.png' %}{% endif %}"
           alt="Avatar {{ profile.full_name }}"
         />
         <div class="upload-info">
@@ -36,7 +36,7 @@ profile.full_name }}{% endblock %} {% block content %}
           />
           <label for="id_avatar" class="file-input">Chọn ảnh</label>
           {% if profile.avatar %}
-          <button type="submit" name="delete_avatar" class="delete-btn">
+          <button type="button" data-action="delete_avatar" class="delete-btn">
             Xóa ảnh
           </button>
           {% endif %}
@@ -47,7 +47,7 @@ profile.full_name }}{% endblock %} {% block content %}
       <div class="media-box">
         <img
           id="previewBackground"
-          src="{% if profile.background %}{{ profile.background.url }}{% else %}{% static 'images/default-bg.png' %}{% endif %}"
+          src="{% if profile.background %}{{ profile.background.url }}{% else %}{% static 'images/humandefau.png' %}{% endif %}"
           alt="Background {{ profile.full_name }}"
         />
         <div class="upload-info">
@@ -61,7 +61,11 @@ profile.full_name }}{% endblock %} {% block content %}
           />
           <label for="id_background" class="file-input">Chọn ảnh</label>
           {% if profile.background %}
-          <button type="submit" name="delete_background" class="delete-btn">
+          <button
+            type="button"
+            data-action="delete_background"
+            class="delete-btn"
+          >
             Xóa ảnh
           </button>
           {% endif %}
@@ -86,26 +90,10 @@ profile.full_name }}{% endblock %} {% block content %}
 
         <div class="form-field nav-checkboxes">
           <label>Hiển thị Navigation</label>
-
-          <label>
-            {{ form.show_home }}
-            <span>Trang Chủ</span>
-          </label>
-
-          <label>
-            {{ form.show_intro }}
-            <span>Giới Thiệu</span>
-          </label>
-
-          <label>
-            {{ form.show_products }}
-            <span>Sản Phẩm</span>
-          </label>
-
-          <label>
-            {{ form.show_auth }}
-            <span>Đăng Nhập</span>
-          </label>
+          <label>{{ form.show_home }} <span>Trang Chủ</span></label>
+          <label>{{ form.show_intro }} <span>Giới Thiệu</span></label>
+          <label>{{ form.show_products }} <span>Sản Phẩm</span></label>
+          <label>{{ form.show_auth }} <span>Đăng Nhập</span></label>
         </div>
 
         <div class="form-actions">
@@ -233,7 +221,7 @@ profile.full_name }}{% endblock %} {% block content %}
 </div>
 
 <script>
-  // Xử lý avatar/background (cropper)
+  // Xử lý cropper đóng modal
   document.addEventListener("DOMContentLoaded", function () {
     const cropModal = document.getElementById("cropModal");
     if (cropModal) {
@@ -245,7 +233,7 @@ profile.full_name }}{% endblock %} {% block content %}
     }
   });
 
-  // Xác nhận xóa
+  // Xác nhận xóa sản phẩm
   document.querySelectorAll(".btn-delete").forEach((btn) => {
     btn.addEventListener("click", function (e) {
       if (
@@ -257,16 +245,60 @@ profile.full_name }}{% endblock %} {% block content %}
     });
   });
 
-  // === Toggle form sửa sản phẩm ===
+  // Toggle form sửa sản phẩm
   function openEditForm(id) {
     const form = document.getElementById("edit-form-" + id);
     if (form) form.style.display = "block";
   }
-
   function closeEditForm(id) {
     const form = document.getElementById("edit-form-" + id);
     if (form) form.style.display = "none";
   }
+
+  // Xử lý auto-submit cho avatar, background, checkbox
+  document.addEventListener("DOMContentLoaded", function () {
+    const profileForm = document.getElementById("profileForm");
+
+    // Khi chọn file avatar hoặc background -> submit ngay
+    ["id_avatar", "id_background"].forEach((id) => {
+      const input = document.getElementById(id);
+      if (input) {
+        input.addEventListener("change", () => {
+          ensureHiddenInput("save_profile");
+          profileForm.submit();
+        });
+      }
+    });
+
+    // Khi bấm xóa avatar hoặc background -> tạo hidden input tương ứng rồi submit
+    document.querySelectorAll("button[data-action]").forEach((btn) => {
+      btn.addEventListener("click", function () {
+        const action = this.getAttribute("data-action");
+        ensureHiddenInput(action);
+        profileForm.submit();
+      });
+    });
+
+    // Khi click vào checkbox Navigation -> submit ngay
+    document
+      .querySelectorAll(".nav-checkboxes input[type='checkbox']")
+      .forEach((cb) => {
+        cb.addEventListener("change", () => {
+          ensureHiddenInput("save_profile");
+          profileForm.submit();
+        });
+      });
+
+    // Helper: thêm hidden input nếu chưa có
+    function ensureHiddenInput(name) {
+      if (!profileForm.querySelector(`input[name="${name}"]`)) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        profileForm.appendChild(input);
+      }
+    }
+  });
 </script>
 
 {% endblock %}

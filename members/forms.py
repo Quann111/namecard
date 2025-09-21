@@ -1,6 +1,11 @@
 from django import forms
 from .models import Profile
+from .models import Product
 
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ["title", "description", "thumbnail", "video_url"]
 
 class ProfileForm(forms.ModelForm):
     class Meta:

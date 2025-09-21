@@ -25,6 +25,9 @@
   padding: 18px 20px;
   border-bottom: 1px solid var(--border);
   flex-wrap: nowrap;
+  display: flex; /* bật flex */
+  align-items: center; /* căn giữa theo trục dọc */
+  justify-content: space-between; /* đẩy 2 bên ra xa nhau */
 }
 .card-head h1 {
   margin: 0;
@@ -188,4 +191,153 @@
 .uiverse:hover .tooltip::before {
   background: linear-gradient(320deg, rgb(3, 77, 146), rgb(0, 60, 255));
   color: #ffffff;
+}
+
+/* ===== PRODUCT LIST ===== */
+/* ===== PRODUCT LIST ===== */
+.product-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 20px;
+}
+
+.product-card {
+  display: flex;
+  gap: 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.product-thumb {
+  width: 120px;
+  height: auto;
+  object-fit: cover;
+  border-right: 1px solid var(--border);
+}
+
+.product-content {
+  flex: 1;
+  padding: 14px;
+}
+
+.product-content h3 {
+  font-size: 17px;
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.product-content p {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+.product-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.product-actions .btn-edit,
+.product-actions .btn-delete {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.product-actions .btn-edit {
+  background: var(--primary);
+  color: #fff;
+}
+
+.product-actions .btn-edit:hover {
+  background: var(--primary-2);
+}
+
+.product-actions .btn-delete {
+  background: #dc2626;
+  color: #fff;
+}
+
+.product-actions .btn-delete:hover {
+  background: #b91c1c;
+}
+
+/* ===== ADD PRODUCT FORM ===== */
+/* ===== PRODUCT ADD FORM ===== */
+.product-add-form {
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 16px;
+}
+
+/* Fix lại field hiển thị đẹp như form profile */
+.product-add-form p {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.product-add-form label {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.product-add-form input,
+.product-add-form textarea,
+.product-add-form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #3b51f5;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.product-add-form input:focus,
+.product-add-form textarea:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.18);
+}
+
+/* Button thêm sản phẩm */
+.product-add-form button {
+  background: var(--primary);
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+.product-add-form button:hover {
+  background: var(--primary-2);
 }

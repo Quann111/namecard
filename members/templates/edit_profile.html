@@ -1,6 +1,11 @@
 {% extends "master.html" %} {% load static %} {% block title %}Edit Profile - {{
 profile.full_name }}{% endblock %} {% block content %}
 <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
+/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
 <div class="page-wrap">
   <div class="card">
@@ -9,8 +14,8 @@ profile.full_name }}{% endblock %} {% block content %}
       <div class="name">{{ profile.full_name }}</div>
     </div>
 
-    <!-- Form duy nhất -->
-    <form id="profileForm" method="POST" enctype="multipart/form-data">
+    <!-- Form chính: Edit Profile -->
+    <form id="profileForm" method="post" enctype="multipart/form-data">
       {% csrf_token %}
 
       <!-- Avatar -->
@@ -24,12 +29,17 @@ profile.full_name }}{% endblock %} {% block content %}
           <div class="subtitle">Upload new avatar</div>
           <input
             type="file"
-            name="avatar"
             id="id_avatar"
+            name="avatar"
             hidden
             accept="image/*"
           />
           <label for="id_avatar" class="file-input">Chọn ảnh</label>
+          {% if profile.avatar %}
+          <button type="submit" name="delete_avatar" class="delete-btn">
+            Xóa ảnh
+          </button>
+          {% endif %}
         </div>
       </div>
 
@@ -44,152 +54,178 @@ profile.full_name }}{% endblock %} {% block content %}
           <div class="subtitle">Upload new background</div>
           <input
             type="file"
-            name="background"
             id="id_background"
+            name="background"
             hidden
             accept="image/*"
           />
           <label for="id_background" class="file-input">Chọn ảnh</label>
+          {% if profile.background %}
+          <button type="submit" name="delete_background" class="delete-btn">
+            Xóa ảnh
+          </button>
+          {% endif %}
         </div>
       </div>
 
-      <!-- Form fields -->
+      <!-- Các field khác -->
       <div class="form-wrap">
+        <div class="form-field"><label>Username</label>{{ form.username }}</div>
+        <div class="form-field"><label>Password</label>{{ form.password }}</div>
         <div class="form-field">
-          <label for="id_username">Username</label>
-          {{ form.username }}
+          <label>Full Name</label>{{ form.full_name }}
         </div>
+        <div class="form-field"><label>Position</label>{{ form.position }}</div>
+        <div class="form-field"><label>Company</label>{{ form.company }}</div>
+        <div class="form-field"><label>Phone</label>{{ form.phone }}</div>
+        <div class="form-field"><label>Email</label>{{ form.email }}</div>
+        <div class="form-field"><label>Website</label>{{ form.website }}</div>
+        <div class="form-field"><label>YouTube</label>{{ form.youtube }}</div>
+        <div class="form-field"><label>Zalo</label>{{ form.zalo }}</div>
+        <div class="form-field"><label>Viber</label>{{ form.viber }}</div>
 
-        <div class="form-field">
-          <label for="id_password">Password</label>
-          {{ form.password }}
-        </div>
-
-        <div class="form-field">
-          <label for="id_full_name">Full Name</label>
-          {{ form.full_name }}
-        </div>
-
-        <div class="form-field">
-          <label for="id_position">Position</label>
-          {{ form.position }}
-        </div>
-
-        <div class="form-field">
-          <label for="id_company">Company</label>
-          {{ form.company }}
-        </div>
-
-        <div class="form-field">
-          <label for="id_phone">Phone</label>
-          {{ form.phone }}
-        </div>
-
-        <div class="form-field">
-          <label for="id_email">Email</label>
-          {{ form.email }}
-        </div>
-
-        <div class="form-field">
-          <label for="id_website">Website</label>
-          {{ form.website }}
-        </div>
-
-        <div class="form-field">
-          <label for="id_youtube">YouTube</label>
-          {{ form.youtube }}
-        </div>
-
-        <div class="form-field">
-          <label for="id_zalo">Zalo</label>
-          {{ form.zalo }}
-        </div>
-
-        <div class="form-field">
-          <label for="id_viber">Viber</label>
-          {{ form.viber }}
-        </div>
-
-        <!-- Action buttons -->
         <div class="actions">
-          <div class="uiverse">
-            <span class="tooltip">Lưu lại thay đổi</span>
-            <button type="submit" id="saveBtn">Save changes</button>
-          </div>
-
-          <div class="uiverse">
-            <span class="tooltip">Quay lại trang chi tiết</span>
-            <a href="{% url 'details' id=profile.id %}" id="backLink">← Back</a>
-          </div>
+          <button type="submit" name="save_profile" id="saveBtn">
+            Save changes
+          </button>
+          <a href="{% url 'details' id=profile.id %}" id="backLink">← Back</a>
         </div>
       </div>
     </form>
+
+    <hr />
+    <h2 style="text-align: center">Sản phẩm của tôi</h2>
+    <div class="product-list">
+      {% for product in products %}
+      <div class="product-card">
+        {% if product.thumbnail %}
+        <img
+          class="product-thumb"
+          src="{{ product.thumbnail.url }}"
+          alt="{{ product.title }}"
+        />
+        {% endif %}
+
+        <div class="product-content">
+          <h3>{{ product.title }}</h3>
+          <p>{{ product.description }}</p>
+
+          <!-- Actions -->
+          <div class="product-actions">
+            <button
+              type="button"
+              class="btn-edit"
+              onclick="openEditForm({{ product.id }})"
+            >
+              ✏️ Sửa
+            </button>
+            <a
+              href="{% url 'delete_product' profile.id product.id %}"
+              class="btn-delete"
+            >
+              🗑️ Xóa
+            </a>
+          </div>
+
+          <!-- Form ẩn để sửa (KHÔNG lồng trong profileForm) -->
+          <form
+            id="edit-form-{{ product.id }}"
+            class="edit-form"
+            method="post"
+            enctype="multipart/form-data"
+            style="display: none"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.id }}" />
+
+            <div class="form-field">
+              <label>Title</label>
+              <input
+                type="text"
+                name="title"
+                value="{{ product.title }}"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label>Description</label>
+              <textarea name="description" rows="3">
+{{ product.description }}</textarea
+              >
+            </div>
+
+            <div class="form-field">
+              <label>Thumbnail</label>
+              <input type="file" name="thumbnail" accept="image/*" />
+            </div>
+
+            <div class="product-actions">
+              <button type="submit" name="update_product" class="btn-edit">
+                💾 Lưu thay đổi
+              </button>
+              <button
+                type="button"
+                onclick="closeEditForm({{ product.id }})"
+                class="btn-delete"
+              >
+                ❌ Hủy
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      {% empty %}
+      <p>Bạn chưa có sản phẩm nào.</p>
+      {% endfor %}
+    </div>
+
+    <hr />
+    <h3 style="text-align: center">Thêm sản phẩm mới</h3>
+    <form method="post" enctype="multipart/form-data" class="product-add-form">
+      {% csrf_token %} {{ product_form.as_p }}
+      <button type="submit" name="add_product" class="btn-add">
+        ➕ Thêm sản phẩm
+      </button>
+    </form>
   </div>
 </div>
-{% endblock %}
 
 <script>
+  // Xử lý avatar/background (cropper)
   document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("profileForm");
-    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
-
-    function handleImageUpload(input, imgId) {
-      const file = input.files[0];
-      if (!file) return;
-
-      if (file.size > MAX_SIZE) {
-        alert("Ảnh quá lớn! Giới hạn tối đa 10MB.");
-        input.value = "";
-        return;
-      }
-
-      // Preview tạm
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        document.getElementById(imgId).src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-
-      // Submit ngay để lưu + reload trang
-      form.submit();
-    }
-
-    // Avatar
-    const avatarInput = document.getElementById("id_avatar");
-    if (avatarInput) {
-      avatarInput.addEventListener("change", function () {
-        handleImageUpload(this, "previewAvatar");
-      });
-    }
-
-    // Background
-    const bgInput = document.getElementById("id_background");
-    if (bgInput) {
-      bgInput.addEventListener("change", function () {
-        handleImageUpload(this, "previewBackground");
-      });
-    }
-
-    // Nút Save
-    const saveBtn = document.getElementById("saveBtn");
-    if (saveBtn) {
-      saveBtn.addEventListener("click", function () {
-        saveBtn.disabled = true;
-        saveBtn.textContent = "Processing...";
-      });
-    }
-
-    // Nút Back
-    const backLink = document.getElementById("backLink");
-    if (backLink) {
-      backLink.addEventListener("click", function (e) {
-        e.preventDefault();
-        const url = backLink.getAttribute("href");
-        backLink.textContent = "Loading...";
-        setTimeout(() => {
-          window.location.href = url;
-        }, 1200);
+    const cropModal = document.getElementById("cropModal");
+    if (cropModal) {
+      const closeCrop = document.getElementById("closeCrop");
+      closeCrop.addEventListener("click", () => {
+        cropModal.style.display = "none";
+        if (cropper) cropper.destroy();
       });
     }
   });
+
+  // Xác nhận xóa
+  document.querySelectorAll(".btn-delete").forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      if (
+        this.tagName === "A" &&
+        !confirm("Bạn có chắc muốn xóa sản phẩm này?")
+      ) {
+        e.preventDefault();
+      }
+    });
+  });
+
+  // === Toggle form sửa sản phẩm ===
+  function openEditForm(id) {
+    const form = document.getElementById("edit-form-" + id);
+    if (form) form.style.display = "block";
+  }
+
+  function closeEditForm(id) {
+    const form = document.getElementById("edit-form-" + id);
+    if (form) form.style.display = "none";
+  }
 </script>
+
+{% endblock %}

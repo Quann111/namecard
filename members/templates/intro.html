@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Giới Thiệu - Digital Business Card</title>
+    <style>
+      :root {
+        --primary: #001e55;
+        --secondary: #ffc815;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #ece6ea;
+        color: #333;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 80px; /* chừa chỗ cho nav-bar */
+      }
+
+      /* Ảnh cover */
+      .intro-header img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        display: block;
+        padding: 10px;
+        border-radius: 20px;
+      }
+
+      /* Nội dung */
+      .intro-content {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .intro-content h2 {
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+        color: #333;
+      }
+
+      .intro-content h3 {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 14px;
+        color: #6b5f57;
+      }
+
+      .intro-content p {
+        font-size: 12px;
+        line-height: 1.5;
+        color: #444;
+      }
+
+      /* Navigation wrapper để canh giữa */
+      .nav-wrapper {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        background: #fff;
+        border-top: 1px solid #ddd;
+        z-index: 1000;
+      }
+      .nav-wrapper .nav-bar {
+        max-width: 480px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Ảnh bìa -->
+    <div class="intro-header">
+      <img src="{% static 'images/bia.png' %}" alt="cover" />
+    </div>
+
+    <!-- Nội dung giới thiệu -->
+    <div class="intro-content">
+      <h2>STUDIO KĨ XẢO HÌNH ẢNH</h2>
+      <h3>PanaMotion</h3>
+      <p>
+        Là một studio tiên phong trong lĩnh vực sản xuất hình ảnh và sáng tạo
+        hiệu ứng, kĩ xảo đặc biệt (visual effects) tại Việt Nam, PanaMotion đã
+        luôn nỗ lực tìm tòi, đưa những kĩ thuật hiện đại được sử dụng trong
+        nhiều bộ phim bom tấn của Hollywood áp dụng vào quy trình sản xuất phim
+        quảng bá, giới thiệu sản phẩm trong nước.
+      </p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-wrapper">
+      {% include "navigation.html" with profile=profile %}
+    </div>
+  </body>
+</html>

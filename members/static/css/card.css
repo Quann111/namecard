@@ -1,8 +1,7 @@
 :root {
   --primary: #001e55;
-  --secondary: #ffc815;
-  --light-bg: #f9fafd;
-  --gray-text: #666;
+  --secondary: #c3773c;
+  --nav-h: 60px; /* chiều cao thanh nav-bar */
 }
 
 /* Reset */
@@ -15,34 +14,38 @@
 /* Body */
 body {
   font-family: "Segoe UI", sans-serif;
-  background-color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: #fff;
   min-height: 100vh;
   width: 100vw;
   overflow-x: hidden;
   color: var(--secondary);
+  display: flex;
+  justify-content: center;
 }
 
-/* Card */
+/* Card layout */
 .card-container {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  max-width: 480px; /* căn giữa trên màn hình lớn */
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: #e8e3e9;
+  position: relative;
+  padding-bottom: var(--nav-h); /* để nội dung không bị nav-bar che */
 }
 
 /* Header */
 .header {
   background-color: var(--primary);
-  flex: 0 0 20%;
+  flex: 0 0 20vh;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   position: relative;
-  cursor: zoom-in; /* cho phép click */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .profile-img {
@@ -55,8 +58,7 @@ body {
   object-fit: cover;
   position: absolute;
   bottom: -9vh;
-  cursor: zoom-in; /* click vào avatar */
-  pointer-events: auto; /* tránh bị ăn event từ header */
+  cursor: zoom-in;
 }
 
 /* Content */
@@ -65,25 +67,26 @@ body {
   padding: 12vh 5% 5%;
   text-align: center;
   overflow-y: auto;
-  background: #313131;
+  background: #e8e3e9;
 }
 .name {
   font-size: 2.5vh;
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 0.5vh;
+  color: var(--secondary);
 }
-.position {
+.position,
+.company {
   font-size: 1.8vh;
-  color: #ffffff;
-  margin-bottom: 0.3vh;
+  color: #562b1a;
+  margin-bottom: 1vh;
 }
 .company {
-  font-size: 1.7vh;
-  color: #ffffff;
   margin-bottom: 3vh;
 }
-/* Button group (2 nút trên cùng) */
+
+/* Button group */
 .button-group {
   display: flex;
   justify-content: center;
@@ -92,8 +95,8 @@ body {
 }
 .button {
   flex: 1;
-  background: #ffc815;
-  color: #222224;
+  background: var(--secondary);
+  color: #e8e3e9;
   font-size: 1.8vh;
   font-weight: 600;
   padding: 1.2vh 0;
@@ -101,21 +104,16 @@ body {
   border-radius: 5px;
   cursor: pointer;
   text-decoration: none;
-
-  /* Flex để icon + text giữa */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  transition: 0.2s ease;
 }
-
 .button img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
+  width: 22px;
+  height: 22px;
 }
-
-/* Hover hiệu ứng */
 .button:hover {
   background: #0fbcf9;
   color: #fff;
@@ -129,55 +127,28 @@ body {
   padding: 1.2vh 1.5vh;
   margin-bottom: 1.5vh;
   width: 100%;
-  /* border: 1px solid var(--secondary);*/
-  border-radius: 6px;
-  background: #27272a;
+  border-radius: 10px;
+  background: #e8e3e9; /* nền sáng */
   font-size: 1.8vh;
-  color: #ffffff;
-  text-align: left;
-  cursor: pointer;
+  color: #333;
   text-decoration: none;
-}
+  font-weight: 500;
+  transition: all 0.2s ease;
 
-.contact-btn .icon-img {
+  /* Hiệu ứng nổi 3D */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #ddd;
+}
+.contact-btn img {
   width: 22px;
   height: 22px;
-  object-fit: contain;
-  flex-shrink: 0;
+}
+.contact-btn:hover {
+  background: #444;
 }
 
-/* Nav Buttons */
-.nav-buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1vh;
-  margin-top: 3vh;
-}
-.nav-button {
-  padding: 1.2vh 0;
-  font-size: 1.2vh;
-  font-weight: 600;
-  border: none;
-  border-radius: 6px;
-  color: #ffffff;
-  cursor: pointer;
-  text-transform: uppercase;
-}
-.nav-home {
-  background: #ffc815;
-}
-.nav-intro {
-  background: #874d10;
-}
-.nav-product {
-  background: #874d10;
-}
-.nav-login {
-  background: #874d10;
-}
-
-/* Popup Overlay */
-.overlay {
+/* Popup */
+.popup-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
@@ -186,149 +157,96 @@ body {
   align-items: center;
   z-index: 999;
 }
-.overlay:target {
+.popup-toggle:checked + .popup-overlay {
   display: flex;
-  animation: fadeInOverlay 0.3s ease;
 }
-
-/* Popup Box */
-.popup {
+.popup-box {
   background: #fff;
-  padding: 30px;
+  padding: 20px;
   border-radius: 10px;
   width: 300px;
   text-align: center;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
-  animation: slideDown 0.4s ease;
+  animation: slideDown 0.3s ease;
 }
-.popup h2 {
-  margin-bottom: 15px;
-  color: #00377b;
-}
-.popup p {
-  margin-bottom: 20px;
-  color: #555;
-}
-
-/* Nút Đóng */
 .close-btn {
-  background: #00377b;
-  color: #4bcffa;
+  background: var(--primary);
+  color: #fff;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 6px;
   text-decoration: none;
   font-weight: bold;
-  transition: box-shadow 0.3s ease, transform 0.2s ease;
-}
-.close-btn:hover {
-  background: #0fbcf9;
-  color: #fff;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-  transform: scale(1.05);
-}
-
-/* Glow button */
-/* Glow button có icon + text tách riêng */
-.glow-btn {
-  background: #ffc815;
-  color: #222224;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  text-transform: uppercase;
   cursor: pointer;
-  text-decoration: none;
-  transition: box-shadow 0.3s ease, transform 0.2s ease;
-
-  display: inline-flex; /* flex để xếp icon + text */
-  align-items: center; /* căn giữa dọc */
-  justify-content: unset; /* căn giữa ngang */
-  gap: 8px; /* khoảng cách giữa icon và text */
-  padding: 1.2vh 1.5vh; /* padding trong button */
 }
 
-/* Icon */
-.icon-img-luudanhba-chiase {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-}
-
-/* Text trong nút */
-.btn-text {
-  margin: 0;
-  padding: 0;
-  line-height: 1;
-  font-size: 13px;
-  font-weight: bold;
-}
-
-.glow-btn:hover {
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-  transform: scale(1.05);
-  color: #fff;
-  background: #0fbcf9;
-}
-
-/* Modal nền đen full màn hình */
+/* Modal xem ảnh */
 .image-modal {
   display: none;
   position: fixed;
   z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.9);
-  padding-top: 60px;
 }
 .image-modal img {
   margin: auto;
   display: block;
   max-width: 90%;
   max-height: 90%;
-  border-radius: 6px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-  animation: fadeIn 0.3s ease;
 }
 .image-modal .close {
   position: absolute;
-  top: 3px;
+  top: 10px;
   right: 30px;
   color: #fff;
-  font-size: 40px;
-  font-weight: bold;
+  font-size: 36px;
   cursor: pointer;
 }
-.image-modal .close:hover {
-  color: #ccc;
+
+/* ===== Navigation Bar ===== */
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: 480px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #e8e3e9;
+  padding: 10px;
+  gap: 10px;
+  justify-items: center;
+  z-index: 1000;
 }
 
-/* Hiệu ứng */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.nav-bar .nav-button {
+  display: inline-block;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  text-transform: uppercase;
+  text-align: center;
+  background: #b29f91;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
-@keyframes fadeInOverlay {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+
+.nav-bar .nav-button:not([disabled]):hover {
+  background: #c3773c;
+  color: #fff;
+  transform: translateY(-2px);
 }
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+
+.nav-bar .nav-button.active {
+  background: #c3773c;
+  color: #fff;
+}
+
+.nav-bar .nav-button[disabled] {
+  background: #777;
+  color: #eee;
+  cursor: not-allowed;
+  pointer-events: none;
 }

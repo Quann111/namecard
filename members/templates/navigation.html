@@ -1,0 +1,82 @@
+<style>
+  /* ===== Navigation Bar ===== */
+  .nav-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: transparent;
+    padding: 6px;
+    gap: 3px;
+    justify-items: center;
+    z-index: 1000;
+  }
+
+  .nav-bar .nav-button {
+    display: inline-block;
+    padding: 10px 16px;
+    font-size: 9px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    text-transform: uppercase;
+    text-align: center;
+    background: #b29f91;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .nav-bar .nav-button:not([disabled]):hover {
+    background: #c3773c;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  .nav-bar .nav-button.active {
+    background: #c3773c;
+    color: #fff;
+  }
+
+  .nav-bar .nav-button[disabled] {
+    background: #b29f91;
+    color: #eee;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+</style>
+
+<div class="nav-bar">
+  <!-- Trang Chủ -->
+  <a
+    href="{% if current_id %}{% url 'details' current_id %}{% else %}{% url 'members' %}{% endif %}"
+    class="nav-button {% if '/members/' in request.path and not '/products/' in request.path and not '/edit/' in request.path %}active{% endif %}"
+  >
+    Trang Chủ
+  </a>
+
+  <!-- Giới Thiệu -->
+  <a
+    href="{% url 'template_intro' %}"
+    class="nav-button {% if request.path == '/intro/' %}active{% endif %}"
+  >
+    Giới Thiệu
+  </a>
+
+  <!-- Sản Phẩm -->
+  <a
+    href="{% if current_id %}{% url 'template_product' current_id %}{% else %}{% url 'members' %}{% endif %}"
+    class="nav-button {% if '/products/' in request.path %}active{% endif %}"
+  >
+    Sản Phẩm
+  </a>
+
+  <!-- Đăng Nhập -->
+  <a
+    href="{% url 'auth_tabs' %}"
+    class="nav-button {% if request.path == '/auth/' %}active{% endif %}"
+  >
+    Đăng Nhập
+  </a>
+</div>

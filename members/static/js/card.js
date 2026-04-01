@@ -28,7 +28,7 @@ function normalizePhone(raw) {
 })();
 
 // ================== URL PROFILE ==================
-const PROFILE_URL = "{{ request.build_absolute_uri|escapejs }}";
+const PROFILE_URL = window.location.href;
 
 // ================== CHIA SẺ ==================
 (function sharePopupHandlers() {
@@ -46,7 +46,7 @@ const PROFILE_URL = "{{ request.build_absolute_uri|escapejs }}";
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "qr_profile_{{ profile.id }}.png";
+        a.download = "qr_profile.png";
         document.body.appendChild(a);
         a.click();
         a.remove();

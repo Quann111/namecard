@@ -1,107 +1,162 @@
 <style>
   /* ===== Navigation Bar ===== */
+
   .nav-bar {
-    position: fixed;
+    max-width: 480px; /* giữ card nằm gọn ở giữa */
+
     bottom: 0;
+
     left: 0;
+
     right: 0;
-    display: flex; /* dùng flex cho canh giữa */
-    justify-content: center; /* luôn canh giữa */
+
+    display: flex;
+    margin: 0 auto; /* căn giữa toàn bộ trên màn hình lớn */
+    justify-content: center; /* ép sang trái */
+
     align-items: center;
-    gap: 6px; /* khoảng cách giữa nút */
+
+    gap: 5px;
+
     padding: 6px;
+
     background: transparent;
-    z-index: 1000;
-    flex-wrap: wrap; /* phòng khi nhỏ màn hình */
+
+    flex-wrap: wrap;
   }
 
   .nav-bar .nav-button {
     display: inline-block;
-    min-width: 70px; /* nút không quá bé */
-    padding: 10px 16px;
-    font-size: 10px;
-    font-weight: 600;
-    border: none;
-    border-radius: 6px;
-    text-transform: uppercase;
+
     text-align: center;
+
+    padding: 10px 16px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    border: none;
+
+    border-radius: 6px;
+
+    text-transform: uppercase;
+
     background: #b29f91;
+
     color: #fff;
+
     text-decoration: none;
-    transition: all 0.2s ease;
+
+    transition: background 0.2s ease, color 0.2s ease;
   }
 
-  .nav-bar .nav-button:not([disabled]):hover {
+  .nav-bar .nav-button:hover {
     background: #c3773c;
+
     color: #fff;
-    transform: translateY(-2px);
   }
 
   .nav-bar .nav-button.active {
     background: #c3773c;
+
     color: #fff;
   }
 
   .nav-bar .nav-button[disabled] {
     background: #b29f91;
+
     color: #eee;
+
     cursor: not-allowed;
+
     pointer-events: none;
   }
 
   /* Mobile responsive */
+
   @media (max-width: 600px) {
     .nav-bar {
       gap: 4px;
     }
+
     .nav-bar .nav-button {
-      flex: 1; /* nút tự giãn đều chiều ngang */
+      flex: 1;
+
       min-width: unset;
+
+      width: auto;
+
       font-size: 9px;
-      padding: 8px 10px;
+
+      padding: 8px 0;
     }
   }
 </style>
-{% with p=profile %}
+
+{% with cid=current_id|default:request.session.current_id %}
+
 <div class="nav-bar">
   <!-- Trang Chủ -->
-  {% if not p or p.show_home %}
+
+  {% if profile.show_home %}
+
   <a
-    href="{% if current_id %}{% url 'details' current_id %}{% else %}{% url 'members' %}{% endif %}"
+    href="{% if cid %}{% url 'details' cid %}{% else %}{% url 'members' %}{% endif %}"
     class="nav-button {% if '/members/' in request.path and not '/products/' in request.path and not '/edit/' in request.path %}active{% endif %}"
   >
     Trang Chủ
   </a>
+
   {% endif %}
 
   <!-- Giới Thiệu -->
-  {% if not p or p.show_intro %}
+
+  {% if profile.show_intro %}
+
   <a
     href="{% url 'template_intro' %}"
     class="nav-button {% if request.path == '/intro/' %}active{% endif %}"
   >
     Giới Thiệu
   </a>
+
   {% endif %}
 
   <!-- Sản Phẩm -->
-  {% if not p or p.show_products %}
+
+  {% if profile.show_products %}
+
   <a
-    href="{% if current_id %}{% url 'template_product' current_id %}{% else %}{% url 'members' %}{% endif %}"
+    href="{% if cid %}{% url 'template_product' cid %}{% else %}{% url 'members' %}{% endif %}"
     class="nav-button {% if '/products/' in request.path %}active{% endif %}"
   >
     Sản Phẩm
   </a>
+
   {% endif %}
 
-  <!-- Đăng Nhập -->
-  {% if not p or p.show_auth %}
+  <!-- Đăng Nhập / Hồ Sơ -->
+
+  {% if profile.show_auth %} {% if request.session.user_id %}
+
   <a
-    href="{% url 'auth_tabs' %}"
-    class="nav-button {% if request.path == '/auth/' %}active{% endif %}"
+    href="{% url 'edit_profile' request.session.user_id %}"
+    class="nav-button {% if '/edit/' in request.path %}active{% endif %}"
+  >
+    Hồ Sơ
+  </a>
+
+  {% else %}
+
+  <a
+    href="{% url 'login' %}"
+    class="nav-button {% if request.path == '/login/' %}active{% endif %}"
   >
     Đăng Nhập
   </a>
-  {% endif %}
+
+  {% endif %} {% endif %}
 </div>
+
 {% endwith %}

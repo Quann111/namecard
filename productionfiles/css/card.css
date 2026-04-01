@@ -1,0 +1,314 @@
+/* Nav button giữ nguyên màu gốc */
+.nav-bar .nav-button:hover,
+.nav-bar .nav-button:active,
+.nav-bar .nav-button:focus {
+  background: var(--secondary) !important;
+  color: #fff !important;
+  transform: none !important;
+}
+.btnDownloadPDF {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+/* Button */
+.download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* khoảng cách icon và chữ */
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #627281; /* nền xám xanh như ảnh */
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  width: 132px; /* đúng kích thước ảnh bạn đo */
+  height: 28px; /* đúng kích thước ảnh bạn đo */
+}
+
+/* Icon */
+.download-btn .icon-img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+/* Button trong card giữ nguyên màu gốc */
+.button:hover,
+.button:active,
+.button:focus {
+  background: var(--secondary) !important;
+  color: #e8e3e9 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Contact-btn thì không đổi màu khi hover */
+.contact-btn:hover,
+.contact-btn:active,
+.contact-btn:focus {
+  background: #e8e3e9 !important;
+  color: #333 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+:root {
+  --primary: #001e55;
+  --secondary: #c3773c;
+  --nav-h: 60px; /* chiều cao thanh nav-bar */
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body */
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #fff;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  color: var(--secondary);
+  display: flex;
+  justify-content: center;
+}
+
+/* Card layout */
+.card-container {
+  width: 100%;
+  min-height: 100vh;
+  max-width: 480px; /* căn giữa trên màn hình lớn */
+  display: flex;
+  flex-direction: column;
+  background: #e8e3e9;
+  position: relative;
+  padding-bottom: var(--nav-h); /* để nội dung không bị nav-bar che */
+}
+
+/* Header */
+.header {
+  background-color: var(--primary);
+  flex: 0 0 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.profile-img {
+  width: 18vh;
+  height: 18vh;
+  max-width: 160px;
+  max-height: 160px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  object-fit: cover;
+  position: absolute;
+  bottom: -9vh;
+  cursor: zoom-in;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  padding: 12vh 5% 5%;
+  text-align: center;
+  overflow-y: auto;
+  background: #e8e3e9;
+}
+.name {
+  font-size: 2.5vh;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.5vh;
+  color: var(--secondary);
+}
+.position,
+.company {
+  font-size: 1.8vh;
+  color: #562b1a;
+  margin-bottom: 1vh;
+}
+.company {
+  margin-bottom: 3vh;
+}
+
+/* Button group */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 2vw;
+  margin-bottom: 3vh;
+}
+.button {
+  flex: 1;
+  background: var(--secondary);
+  color: #e8e3e9;
+  font-size: 1.8vh;
+  font-weight: 600;
+  padding: 1.2vh 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: 0.2s ease;
+}
+.button img {
+  width: 22px;
+  height: 22px;
+}
+.button:hover {
+  background: #0fbcf9;
+  color: #fff;
+}
+
+/* Contact buttons */
+.contact-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 1.2vh 1.5vh;
+  margin-bottom: 1.5vh;
+  width: 100%;
+  border-radius: 10px;
+  background: #e8e3e9; /* nền sáng */
+  font-size: 1.8vh;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  /* Hiệu ứng nổi 3D */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #ddd;
+}
+.contact-btn img {
+  width: 22px;
+  height: 22px;
+}
+.contact-btn:hover {
+  background: #444;
+}
+
+/* Popup */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.popup-toggle:checked + .popup-overlay {
+  display: flex;
+}
+.popup-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+  animation: slideDown 0.3s ease;
+}
+.close-btn {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Modal xem ảnh */
+.image-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+.image-modal img {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 90%;
+}
+.image-modal .close {
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  color: #fff;
+  font-size: 36px;
+  cursor: pointer;
+}
+
+/* ===== Navigation Bar ===== */
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: 480px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #e8e3e9;
+  padding: 10px;
+  gap: 10px;
+  justify-items: center;
+  z-index: 1000;
+}
+
+.nav-bar .nav-button {
+  display: inline-block;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  text-transform: uppercase;
+  text-align: center;
+  background: #b29f91;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.nav-bar .nav-button:not([disabled]):hover {
+  background: #c3773c;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.nav-bar .nav-button.active {
+  background: #c3773c;
+  color: #fff;
+}
+
+.nav-bar .nav-button[disabled] {
+  background: #777;
+  color: #eee;
+  cursor: not-allowed;
+  pointer-events: none;
+}

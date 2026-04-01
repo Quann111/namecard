@@ -1,34 +1,53 @@
 {% load static %}
+
 <!DOCTYPE html>
+
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Sản phẩm - {{ profile.full_name }}</title>
+
     <style>
       body {
         font-family: "Segoe UI", sans-serif;
+
         background: #f9f9f9;
+
         color: #333;
+
         margin: 0;
+
         padding: 0 0 80px;
+        font-family: "Segoe UI", sans-serif;
       }
 
       .container {
         max-width: 480px;
+
         margin: 0 auto;
+
         padding: 12px;
       }
 
       /* Card */
+
       .video-card {
         background: #fff;
+
         border-radius: 12px;
+
         overflow: hidden;
+
         margin-bottom: 16px;
+
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
         transition: transform 0.2s ease;
       }
+
       .video-card:hover {
         transform: translateY(-3px);
       }
@@ -39,8 +58,11 @@
 
       .video-card img {
         width: 100%;
+
         aspect-ratio: 16/9;
+
         object-fit: cover;
+
         display: block;
       }
 
@@ -50,18 +72,27 @@
 
       .text-box strong {
         display: block;
+
         margin-bottom: 6px;
+
         font-size: 14px;
+
         color: #222;
       }
 
       .description {
         font-size: 13px;
+
         line-height: 1.4;
+
         color: #333;
+
         max-height: 15.4em; /* ~11 dòng */
+
         overflow: hidden;
+
         position: relative;
+
         transition: max-height 0.3s ease;
       }
 
@@ -71,55 +102,89 @@
 
       .fade {
         position: absolute;
+
         bottom: 0;
+
         left: 0;
+
         right: 0;
+
         height: 3em;
+
         background: linear-gradient(to bottom, transparent, #fff);
       }
 
       .toggle-btn {
         margin-top: 6px;
+
         font-size: 12px;
+
         font-weight: 600;
+
         color: #c3773c;
+
         background: none;
+
         border: none;
+
         cursor: pointer;
+
         padding: 0;
       }
 
       /* Navigation */
+
       .nav-wrapper {
         position: fixed;
+
         bottom: 0;
+
         left: 0;
+
         right: 0;
+
         display: flex;
+
         justify-content: center;
+
         z-index: 1000;
+
         background: #fff;
+
         border-top: 1px solid #ddd;
       }
 
       .nav-bar {
         width: 100%;
+
         max-width: 480px;
+
         display: grid;
+
         grid-template-columns: repeat(4, 1fr);
+
         padding: 8px;
+
         gap: 8px;
       }
 
       .nav-bar .nav-button {
         text-align: center;
+
         font-size: 11px;
+
         font-weight: 600;
+
         border-radius: 6px;
+
         padding: 8px 6px;
+
         background: #b29f91;
+
         color: #fff;
+
         text-transform: uppercase;
+
         transition: 0.2s;
       }
 
@@ -128,59 +193,87 @@
       }
     </style>
   </head>
+
   <body>
     <div class="container">
       {% for product in products %}
+
       <div class="video-card">
         <!-- Link chỉ áp dụng cho ảnh -->
+
         {% if product.video_url %}
+
         <a href="{{ product.video_url }}" target="_blank">
           {% if product.thumbnail %}
+
           <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}" />
+
           {% else %}
+
           <img src="{% static 'images/default-video.png' %}" alt="No video" />
+
           {% endif %}
         </a>
+
         {% else %} {% if product.thumbnail %}
+
         <img src="{{ product.thumbnail.url }}" alt="{{ product.title }}" />
+
         {% else %}
+
         <img src="{% static 'images/default-video.png' %}" alt="No video" />
+
         {% endif %} {% endif %}
 
         <!-- Text + More/Less -->
+
         <div class="text-box">
           <strong>{{ product.title }}</strong>
+
           <div class="description-wrapper" style="position: relative">
             <p class="description">{{ product.description }}</p>
+
             <div class="fade"></div>
           </div>
+
           {% if product.description %}
+
           <button class="toggle-btn">More</button>
+
           {% endif %}
         </div>
       </div>
+
       {% empty %}
+
       <p style="text-align: center">Chưa có sản phẩm nào.</p>
+
       {% endfor %}
     </div>
 
     <!-- Navigation -->
+
     <div class="nav-wrapper">{% include "navigation.html" %}</div>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".video-card").forEach(function (card) {
           const desc = card.querySelector(".description");
+
           const fade = card.querySelector(".fade");
+
           const btn = card.querySelector(".toggle-btn");
 
           if (desc && btn) {
             btn.addEventListener("click", function (e) {
               e.preventDefault();
+
               desc.classList.toggle("expanded");
+
               fade.style.display = desc.classList.contains("expanded")
                 ? "none"
                 : "block";
+
               btn.textContent = desc.classList.contains("expanded")
                 ? "Less"
                 : "More";

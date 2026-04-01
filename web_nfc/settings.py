@@ -11,10 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "changeme-in-local")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False").lower() == "false"
+DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
 
 # Hosts
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1 localhost [::1]").split()
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1 localhost [::1] *").split()
 
 # Application definition
 INSTALLED_APPS = [
@@ -52,7 +52,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.media",   # ✅ thêm dòng này
+                "django.template.context_processors.media",   # để template dùng MEDIA_URL
+                "members.context_processors.current_profile",
 
             ],
         },
@@ -61,22 +62,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "web_nfc.wsgi.application"
 
-# Database default = SQLite, nếu có DATABASE_URL thì override
+# ==========================
+# Database
+# ==========================
+
+# Default: SQLite (local)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("DB_NAME", "webnfc"),
-        'USER': os.environ.get("DB_USER", "webnfc_user"),
-        'PASSWORD': os.environ.get("DB_PASSWORD", "1t74n3mnc4Fkqs70pY3CZtG78o9TH0fw"),
-        'HOST': os.environ.get("DB_HOST", "dpg-d300hcvdiees738rf8rg-a.frankfurt-postgres.render.com"),
-        'PORT': os.environ.get("DB_PORT", "5432"),
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# Nếu có DATABASE_URL (Heroku/Render, thường là Postgres) thì override
 database_url = os.environ.get("DATABASE_URL")
 if database_url:
     DATABASES["default"] = dj_database_url.parse(database_url)
 
+# ==========================
 # Password validation
+# ==========================
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -84,25 +89,32 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# ==========================
 # Internationalization
+# ==========================
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+# ==========================
 # Static files
+# ==========================
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "productionfiles"  # nơi collectstatic gom vào
 
+# ==========================
 # Media files
+# ==========================
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# ==========================
 # Cloudinary Storage config
+# ==========================
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-# Cloudinary từ biến môi trường (production)
 cloudinary.config(
     cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME", "dyknreycq"),
     api_key=os.environ.get("CLOUDINARY_API_KEY", "821838178795467"),

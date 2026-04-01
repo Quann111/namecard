@@ -27,7 +27,7 @@ def template_product(request):
 
 def template_intro(request):
     return render(request, "intro.html", {
-        "current_id": request.session.get("user_id")
+        "current_id": request.session.get("current_id")  # lấy lại id trước đó
     })
 
 
@@ -42,6 +42,8 @@ def members(request):
 # --- DETAILS ---
 def details(request, id):
     profile = get_object_or_404(Profile, id=id)
+    # lưu vào session
+    request.session["current_id"] = id  
     return render(request, "details.html", {
         "profile": profile,
         "current_id": id,
@@ -164,7 +166,12 @@ def register(request):
 
 
 # --- LOGIN ---
+# --- LOGIN ---
 def login_view(request):
+    # Nếu đã login rồi thì vào luôn trang edit_profile
+    if request.session.get("user_id"):
+        return redirect("edit_profile", id=request.session["user_id"])
+
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -176,7 +183,7 @@ def login_view(request):
                 if check_password(password, profile.password):
                     request.session["user_id"] = profile.id
                     messages.success(request, "Đăng nhập thành công!")
-                    return redirect(reverse("edit_profile", args=[profile.id]))
+                    return redirect("edit_profile", id=profile.id)
                 else:
                     messages.error(request, "Sai mật khẩu!")
             except Profile.DoesNotExist:
@@ -184,7 +191,7 @@ def login_view(request):
     else:
         form = LoginForm()
 
-    return render(request, "auth_tabs.html", {"form": form})
+    return render(request, "login.html", {"form": form})
 
 
 # --- LOGOUT ---
@@ -270,6 +277,7 @@ def auth_tabs(request):
 # --- Product ---
 def template_product(request, id):
     profile = get_object_or_404(Profile, id=id)
+    request.session["current_id"] = id
     products = profile.products.all()
     return render(request, "product.html", {
         "profile": profile,

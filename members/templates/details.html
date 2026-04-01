@@ -143,6 +143,16 @@
           <span>Viber</span>
         </a>
         {% endif %}
+        <div class="btnDownloadPDF">
+          <button id="btnDownloadPDF" class="download-btn">
+            <img
+              src="{% static 'images/download.png' %}"
+              class="icon-img"
+              alt="PDF"
+            />
+            <span class="btn-text">TẢI CREDENTIALS</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -187,6 +197,24 @@
     {% include "navigation.html" with profile=profile current_id=profile.id %}
 
     <script>
+      document
+        .getElementById("btnDownloadPDF")
+        .addEventListener("click", function () {
+          // Danh sách file cần tải
+          const files = [
+            "/media/file/PROFILE_BDS_ENG_CLTB.pdf",
+            "/media/file/PROFILE_COMPANY_ENG_CLTB.pdf",
+          ];
+
+          files.forEach((file) => {
+            const link = document.createElement("a");
+            link.href = file;
+            link.download = file.split("/").pop(); // lấy tên file gốc
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          });
+        });
       document.addEventListener("DOMContentLoaded", function () {
         const modal = document.getElementById("imageModal");
         const modalImg = document.getElementById("modalImage");

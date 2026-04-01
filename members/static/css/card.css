@@ -1,7 +1,68 @@
+/* Nav button giữ nguyên màu gốc */
+.nav-bar .nav-button:hover,
+.nav-bar .nav-button:active,
+.nav-bar .nav-button:focus {
+  background: var(--secondary) !important;
+  color: #fff !important;
+  transform: none !important;
+}
+.btnDownloadPDF {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+/* Button */
+.download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* khoảng cách icon và chữ */
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #627281; /* nền xám xanh như ảnh */
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* Icon */
+.download-btn .icon-img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  margin: 2px;
+}
+
+/* Button trong card giữ nguyên màu gốc */
+.button:hover,
+.button:active,
+.button:focus {
+  background: var(--secondary) !important;
+  color: #e8e3e9 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Contact-btn thì không đổi màu khi hover */
+.contact-btn:hover,
+.contact-btn:active,
+.contact-btn:focus {
+  background: #e8e3e9 !important;
+  color: #333 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
 :root {
   --primary: #001e55;
   --secondary: #c3773c;
   --nav-h: 60px; /* chiều cao thanh nav-bar */
+  font-family: "Segoe UI", sans-serif;
 }
 
 /* Reset */
@@ -38,7 +99,7 @@ body {
 /* Header */
 .header {
   background-color: var(--primary);
-  flex: 0 0 20vh;
+  flex: 0 0 21vh;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -192,6 +253,7 @@ body {
   display: block;
   max-width: 90%;
   max-height: 90%;
+  margin-top: 50%;
 }
 .image-modal .close {
   position: absolute;

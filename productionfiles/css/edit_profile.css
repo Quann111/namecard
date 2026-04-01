@@ -1,0 +1,399 @@
+:root {
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --primary: #243cfd;
+  --primary-2: #1a2fde;
+  --ring: #6c63ff;
+  --border: #e5e7eb;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.page-wrap {
+  max-width: 720px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.card-head {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-head h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+}
+.subtitle {
+  color: var(--muted);
+  font-size: 19px;
+  margin: 6px;
+}
+.name {
+  color: var(--muted);
+  font-size: 24px;
+  margin: 6px;
+}
+
+.media-box {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.media-box img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+.media-box .upload-info {
+  flex: 1;
+}
+
+/* custom file input */
+.file-input {
+  display: inline-block;
+  padding: 10px 16px;
+  border: 1.5px solid var(--primary);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.file-input:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* form layout */
+.form-wrap {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+}
+.form-field label {
+  font-weight: 1000;
+  font-size: 15px;
+}
+.form-field input,
+.form-field textarea,
+.form-field select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #3b51f5;
+  font-size: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.18);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  margin-top: 20px;
+}
+
+/* ===== PRODUCT LIST ===== */
+.product-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 20px;
+}
+
+.product-card {
+  display: flex;
+  gap: 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.product-thumb {
+  width: 120px;
+  height: auto;
+  object-fit: cover;
+  border-right: 1px solid var(--border);
+}
+
+.product-content {
+  flex: 1;
+  padding: 14px;
+}
+.product-content h3 {
+  font-size: 17px;
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: var(--text);
+}
+.product-content p {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+.product-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px; /* thay vì margin trên từng nút */
+  justify-content: flex-start; /* mặc định nằm ngang */
+}
+.product-actions .btn-edit,
+.product-actions .btn-delete {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  margin-top: 20px;
+  justify-content: center;
+}
+.product-actions .btn-edit {
+  background: var(--primary);
+  color: #fff;
+}
+.product-actions .btn-edit:hover {
+  background: var(--primary-2);
+}
+.product-actions .btn-delete {
+  background: #dc2626;
+  color: #fff;
+}
+.product-actions .btn-delete:hover {
+  background: #b91c1c;
+}
+
+/* ===== ADD PRODUCT FORM ===== */
+.product-add-form {
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 16px;
+}
+.product-add-form p {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.product-add-form label {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+}
+.product-add-form input,
+.product-add-form textarea,
+.product-add-form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #3b51f5;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.product-add-form input:focus,
+.product-add-form textarea:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.18);
+}
+.product-add-form button {
+  background: var(--primary);
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+.product-add-form button:hover {
+  background: var(--primary-2);
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .product-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .product-thumb {
+    width: 100%;
+    max-height: 200px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .product-content {
+    padding: 10px;
+  }
+
+  .product-actions {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .product-actions .btn-edit,
+  .product-actions .btn-delete {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .form-field input,
+  .form-field textarea {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .product-add-form {
+    margin: 8px;
+    padding: 12px;
+  }
+}
+/* Custom style cho Django checkbox */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--primary);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* Hover */
+input[type="checkbox"]:hover {
+  border-color: var(--primary-2);
+}
+
+/* Checked */
+input[type="checkbox"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Dấu tick */
+input[type="checkbox"]:checked::after {
+  content: "✔";
+  position: absolute;
+  color: #fff;
+  font-size: 12px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -55%);
+}
+/* Container của nhóm checkbox */
+.form-field.nav-checkboxes {
+  display: flex;
+  flex-direction: column; /* ép thành cột */
+  gap: 10px; /* khoảng cách giữa các dòng */
+  margin-top: 10px;
+}
+
+/* Mỗi label một dòng */
+.form-field.nav-checkboxes label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 15px;
+}
+/* ===== FORM ACTION BUTTONS ===== */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+/* Nút Save */
+.btn-save {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.btn-save:hover {
+  background: var(--primary-2);
+  transform: translateY(-2px);
+}
+
+/* Nút Back */
+.btn-back {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--primary);
+  background: #fff;
+  border: 2px solid var(--primary);
+  transition: all 0.2s ease;
+}
+.btn-back:hover {
+  background: var(--primary);
+  color: #fff;
+}
